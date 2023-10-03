@@ -3,3 +3,5 @@ back/node_modules
 *.idea
 *DS_STORE
 node_modules
+coverage
+.env

@@ -11,7 +11,6 @@ const httpServer: Express = require('http').createServer(app)
 const io = require('socket.io')(httpServer, corsApp)
 app.use('/docs', swaggerUi.serve, swaggerDocument)
 
-app.use('/api', require('./routes/index.routes'))
 
 io.on('connection', (socket:Socket) => {
   console.log('a user connected')
