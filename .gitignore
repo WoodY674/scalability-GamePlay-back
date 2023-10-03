@@ -1,3 +1,4 @@
-﻿back/node_modules
+back/node_modules
 *.idea/
 *.idea
+*DS_STORE
