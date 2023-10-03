@@ -15,9 +15,4 @@ export class SessionDto {
     @Column({ name: 'scale_y' })
     scaleY: number;
 
-    @Column({ name: 'is_session_open' })
-    isSessionOpen: boolean;
-
-
-
 }
