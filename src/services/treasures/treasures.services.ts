@@ -26,7 +26,7 @@ export class TreasuresServices{
         }
     }
 
-    async update(treasure : TreasuresModelUpdate) {
+    async updateClaim(treasure : TreasuresModelUpdate) {
         try {
             const dataSource: DataSource = await this.dataSourceConfig;
             const treasureRepository: Repository<TreasuresDto> = dataSource.getRepository(TreasuresDto);
@@ -38,6 +38,4 @@ export class TreasuresServices{
             throw new Error(error)
         }
     }
-
-
 }

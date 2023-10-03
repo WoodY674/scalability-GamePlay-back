@@ -41,11 +41,5 @@ describe('TreasureService', () => {
         jest.clearAllMocks()
     })
 
-    describe('createPlayers', () => {
-        it('should try catch ', async () => {
-            const dataSource: DataSource = await treasureService.dataSourceConfig
-            let mockRepositoryCrash = jest.spyOn(
-                dataSource, 'getRepository')
-        });
-    });
+
 });

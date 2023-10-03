@@ -1,7 +1,8 @@
-import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {SessionDto} from "./sessions";
 
 @Entity('treasures')
+@Index('treasures_pos',  ["treasures.pos_x", "treasures.pos_y"], {unique: true})
 export class TreasuresDto {
 
     @PrimaryGeneratedColumn()

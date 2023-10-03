@@ -1,8 +1,8 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn } from 'typeorm';
+
 
 @Entity('sessions')
 export class SessionDto {
-
     @PrimaryGeneratedColumn()
     id: number;
 

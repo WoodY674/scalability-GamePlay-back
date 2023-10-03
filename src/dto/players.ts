@@ -1,8 +1,8 @@
-import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm'
-import {Session} from "inspector";
+import {Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm'
 import {SessionDto} from "./sessions";
 
 @Entity('players')
+@Index('player_pos',  ["players.pos_x", "players.pos_y"], {unique: true})
 export class PlayersDto {
     @PrimaryGeneratedColumn()
     id: number
