@@ -1,32 +1,54 @@
-import { type DataSource } from 'typeorm'
+import {type DataSource, Repository} from 'typeorm'
+import {PlayersModelRequest, PlayersModelUpdate} from "../../models/players";
+import {SessionDto} from "../../dto/sessions";
+import {PlayersDto} from "../../dto/players";
+import {SessionModelRequest} from "../../models/sessions";
 
 export class PlayersService {
-  dataSourceConfig: Promise<DataSource>
+    dataSourceConfig: Promise<DataSource>
 
-  constructor (dataSourceConfig: Promise<DataSource>) {
-    this.dataSourceConfig = dataSourceConfig
-  }
+    constructor(dataSourceConfig: Promise<DataSource>) {
+        this.dataSourceConfig = dataSourceConfig
+    }
 
-  // async createPlayers(request: any, response: any) {
-  //     try {
-  //         const dataSource: DataSource = await this.dataSourceConfig;
-  //         const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
-  //         let generateKey: string = Utils.createGameKeySession();
-  //         const keyGame = await playerRepository.save(newUser);
-  //         return response.status(201).json(keyGame);
-  //     } catch (error) {
-  //         return response.status(500).json({message: });
-  //     }
-  // }
+    async create(player: PlayersModelRequest) {
+      try {
+        const dataSource: DataSource = await this.dataSourceConfig;
+        const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
+        const newSession = playerRepository.create({
+            user_id: player.user_id,
+            session: player.session,
+            avatar: player.avatar,
+            posX: player.posX,
+            posY: player.posY
+        });
+        return await playerRepository.save(newSession);
+      } catch (error: any) {
+        throw new Error(error)
+      }
+    }
 
-  // async findGamekeyEsistant(generateKey: string): Promise<boolean> {
-  //     try {
-  //         const dataSource: DataSource = await this.dataSourceConfig;
-  //         const gamekeyRepository: Repository<GamekeySessionDto> = dataSource.getRepository(GamekeySessionDto);
-  //         let isExist = await gamekeyRepository.findBy({game_key_session: generateKey});
-  //         return isExist.length > 0;
-  //     } catch (error) {
-  //         return false;
-  //     }
-  // }
+    async update(player: PlayersModelUpdate) {
+      try {
+        const dataSource: DataSource = await this.dataSourceConfig;
+        const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
+        return await playerRepository.save({
+            id: player.id,
+            posX: player.posX,
+            posY: player.posY
+        })
+      } catch (error: any) {
+        throw new Error(error)
+      }
+    }
+
+    async delete(id: number) {
+      try {
+        const dataSource: DataSource = await this.dataSourceConfig;
+        const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
+        return await playerRepository.delete(id);
+      } catch (error: any) {
+        throw new Error(error)
+      }
+    }
 }
