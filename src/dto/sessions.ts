@@ -17,4 +17,7 @@ export class SessionDto {
 
     @Column({ name: 'is_session_open' })
     isSessionOpen: boolean;
+
+
+
 }
