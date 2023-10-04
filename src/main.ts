@@ -2,8 +2,15 @@ import express, { type Express } from 'express'
 import swaggerUi from 'swagger-ui-express'
 import { swaggerDocument } from './utils/swagger/swagger'
 import { corsApp } from './utils/cors/corsApp'
-import {Axis} from "./models/axis";
 import { Socket } from 'socket.io';
+import {PlayersModelUpdate} from "./models/players";
+import {Axis} from "./models/axis";
+import {DataSource} from "typeorm";
+import {PlayersService} from "./services/players/players.services";
+import {AppDataSource} from "./utils/database/database.config";
+import {TreasuresServices} from "./services/treasures/treasures.services";
+import {TreasuresModelUpdate} from "./models/treasures";
+import {ScoreServices} from "./services/socket/score.services";
 const port: number = 3000
 const app = express()
 app.use(express.json())
@@ -14,28 +21,37 @@ app.use('/docs', swaggerUi.serve, swaggerDocument)
 
 io.on('connection', (socket:Socket) => {
   console.log('a user connected')
+  const playersService = new PlayersService(AppDataSource);
+  const treasuresService = new TreasuresServices(AppDataSource)
+  const scoreService = new ScoreServices()
 
   socket.on('message', (message:string) => {
     console.log(message)
     io.emit('message', `${socket.id.substr(0, 2)} said ${message}`)
   })
 
-  socket.on('move', (data:Axis) => {
-    const { axisX, axisY } = data;
-    console.log(`Received move event - Axis X: ${axisX}, Axis Y: ${axisY}`);
-
+  socket.on('move', async (data: PlayersModelUpdate) => {
+    console.log(`Received move event - Axis X: ${data.posX}, Axis Y: ${data.posY}, id: ${data.id}`);
+    try {
+      const updatedPlayer = await playersService.updatePos(data);
+      console.log('Player updated:', updatedPlayer);
+      io.emit('moveConfirmed', data)
+    } catch (error) {
+      console.error('Error updating player:', error);
+    }
   })
 
-  socket.on('removeTreasure', (data:Axis) => {
-    const { axisX, axisY } = data;
-    console.log(`Received tresure to remove on axis : Axis X: ${axisX}, Axis Y: ${axisY}`);
-
-  })
-
-  socket.on('score', (userId:number) => {
-
-    console.log(`le score de l'user ${userId} est demandé`);
-    socket.emit('scoreUser', 10);
+  socket.on('claim', async (data: TreasuresModelUpdate, idPlayer: number) => {
+    console.log(`Received tresure to remove with id: ${data.id}`);
+    try {
+      const claimedTreasurer = await treasuresService.updateClaim(data)
+      console.log('Treasurer claimed:', claimedTreasurer);
+      io.emit('treasureClaimed', data)
+      const score = await scoreService.getScore();
+      io.emit('score', score!.score, idPlayer);
+    } catch (error) {
+      console.log('Error claim treasure:', error)
+    }
   })
 
   socket.on('disconnect', () => {
