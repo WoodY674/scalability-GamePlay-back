@@ -15,8 +15,8 @@ export class SessionsServices{
             const sessionRepository: Repository<SessionDto> = dataSource.getRepository(SessionDto);
             const newSession = sessionRepository.create({
                 backgroundImg: session.backgroundImg,
-                scaleX: session.scaleX,
-                scaleY: session.scaleY
+                width: session.width,
+                height: session.height
             });
             return await sessionRepository.save(newSession);
         } catch (error: any) {

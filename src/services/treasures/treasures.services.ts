@@ -36,6 +36,26 @@ export class TreasuresServices{
             throw new Error(error)
         }
     }
+    async getAllUnclaimedBySession(curr_session:SessionDto) {
+        try {
+            const dataSource: DataSource = await this.dataSourceConfig;
+            const treasureRepository: Repository<TreasuresDto> = dataSource.getRepository(TreasuresDto);
+            return await treasureRepository.find({
+                select:{
+                    id:true,
+                    img:true,
+                    posX:true,
+                    posY:true,
+                    value:true
+                },
+                where:{
+                    isClaim:false,
+                    session:curr_session
+                }})
+        } catch (error: any) {
+            throw new Error(error)
+        }
+    }
 
     async updateClaim(treasure : TreasuresModelUpdate) {
         try {

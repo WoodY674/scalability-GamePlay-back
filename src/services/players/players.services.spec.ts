@@ -72,8 +72,8 @@ describe('PlayerService', () => {
             session: {
                 id: 1,
                 backgroundImg: 'backgroundImg',
-                scaleX: 1,
-                scaleY: 1
+                width: 1,
+                height: 1
             },
             avatar: 'avatar.png',
             posX: 1,
