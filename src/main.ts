@@ -11,6 +11,9 @@ import {AppDataSource} from "./utils/database/database.config";
 import {TreasuresServices} from "./services/treasures/treasures.services";
 import {TreasuresModelUpdate} from "./models/treasures";
 import {ScoreServices} from "./services/socket/score.services";
+import { Socket } from 'socket.io';
+import SessionController from "./controllers/session";
+
 const port: number = 3000
 const app = express()
 app.use(express.json())
@@ -18,6 +21,7 @@ const httpServer: Express = require('http').createServer(app)
 const io = require('socket.io')(httpServer, corsApp)
 app.use('/docs', swaggerUi.serve, swaggerDocument)
 
+app.use('/session', SessionController)
 
 io.on('connection', (socket:Socket) => {
   console.log('a user connected')

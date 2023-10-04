@@ -2,6 +2,7 @@ import {DataSource, Repository} from "typeorm";
 import {PlayersDto} from "../../dto/players";
 import {TreasuresDto} from "../../dto/treasures";
 import {TreasuresModelRequest, TreasuresModelUpdate} from "../../models/treasures";
+import {SessionDto} from "../../dto/sessions";
 
 export class TreasuresServices{
     dataSourceConfig: Promise<DataSource>
@@ -21,6 +22,16 @@ export class TreasuresServices{
                 session: treasure.session
             });
             return await treasureRepository.save(newSession);
+        } catch (error: any) {
+            throw new Error(error)
+        }
+    }
+
+    async getAll() {
+        try {
+            const dataSource: DataSource = await this.dataSourceConfig;
+            const treasureRepository: Repository<TreasuresDto> = dataSource.getRepository(TreasuresDto);
+            return await treasureRepository.find();
         } catch (error: any) {
             throw new Error(error)
         }

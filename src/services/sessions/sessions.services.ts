@@ -1,11 +1,6 @@
 import {DataSource, Repository} from "typeorm";
 import {SessionDto} from "../../dto/sessions";
-import {Utils} from "../../utils/utils";
 import {SessionModelRequest} from "../../models/sessions";
-import {RequestValidation} from "../../enum/enum";
-import {CustomMessageRequest} from "../../utils/message/custum.message";
-import {TreasuresDto} from "../../dto/treasures";
-import {PlayersDto} from "../../dto/players";
 
 export class SessionsServices{
     dataSourceConfig: Promise<DataSource>
