@@ -7,7 +7,7 @@ COPY package*.json ./
 # Installez les dépendances
 RUN npm install
 # Copiez le reste des fichiers de l'application
-COPY . .
+COPY . /app
 # Port sur lequel votre application écoute
 EXPOSE 3000
 # Commande pour démarrer l'application
