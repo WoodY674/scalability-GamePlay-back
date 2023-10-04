@@ -1,4 +1,3 @@
-import {Column} from "typeorm";
 import {TreasuresDto} from "../dto/treasures";
 import {PlayersDto} from "../dto/players";
 import {SessionDto} from "../dto/sessions";
@@ -13,4 +12,15 @@ export interface SessionModelFrontend{
     width: number;
     height: number;
     backgroundImg: string;
+}
+
+export interface SessionModelLaunch{
+    avatar: string;
+    userId: number;
+}
+
+export interface SessionModelLaunchRes{
+    treasures: TreasuresDto[];
+    players: PlayersDto[];
+    map: SessionDto;
 }

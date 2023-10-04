@@ -6,7 +6,9 @@ import {PlayersService} from "../services/players/players.services";
 import {TreasuresServices} from "../services/treasures/treasures.services";
 import {SessionDto} from "../dto/sessions";
 import {TreasuresDto} from "../dto/treasures";
-import {Column, JoinColumn, ManyToOne} from "typeorm";
+import {SessionModelLaunch, SessionModelLaunchRes} from "../models/sessions";
+import {Utils} from "../utils/utils";
+import {RequestValidation} from "../enum/enum";
 const sessionsServices: SessionsServices = new SessionsServices(AppDataSource);
 const playersServices: PlayersService = new PlayersService(AppDataSource);
 const treasuresServices: TreasuresServices = new TreasuresServices(AppDataSource);
@@ -134,9 +136,22 @@ function getRndInteger(min, max) {
  *         description: An Error Occurred
  */
 SessionController.post("/launch", async function(req, res){
-    //@todo check contains avatar:str + token. img is the avatar selected before starting game.
-    const avatar = "" // req.body.avatar
-    const userId = 1 //req.body.userId
+    const body:SessionModelLaunch = {
+        avatar:"",
+        userId: 0
+    }
+    const checkingBody = Utils.validBodyRequest(req, body)
+    switch (checkingBody){
+        case RequestValidation.NO_BODY:
+            return res.status(400).json({msg:"No body provided, should contains 'avatar':str and 'userId':int"})
+        case RequestValidation.MISSING_PROPERTIES:
+            return res.status(400).json({msg:"Body should contains 'avatar':str and 'userId':int"})
+        case RequestValidation.WRONG_TYPE:
+            return res.status(400).json({msg:"Bad type of data, 'avatar' should be str and 'userId' should be int"})
+    }
+
+    body.avatar = req.body.avatar
+    body.userId = req.body.userId
 
     try {
         let curr_session:SessionDto
@@ -160,14 +175,15 @@ SessionController.post("/launch", async function(req, res){
 
         //@todo : call to service avatar
         //const avatarRes = {}
-        await playersServices.create({userid:userId, posX:getRndInteger(0, curr_session.width), posY:getRndInteger(0, curr_session.height), session:curr_session, avatar:avatar})
+        await playersServices.create({userid:body.userId, posX:getRndInteger(0, curr_session.width), posY:getRndInteger(0, curr_session.height), session:curr_session, avatar:body.avatar})
         const players = await playersServices.getAllBySession(curr_session)
 
-        res.status(201).json({
+        const resBody : SessionModelLaunchRes = {
             treasures: treasures,
             players: players,
             map: curr_session
-        })
+        }
+        res.status(201).json(resBody)
     }catch (e) {
         res.status(500)
     }
