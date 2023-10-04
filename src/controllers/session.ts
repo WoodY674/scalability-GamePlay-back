@@ -173,16 +173,21 @@ SessionController.post("/launch", async function(req, res){
 
         treasures = await treasuresServices.getAllUnclaimedBySession(curr_session)
 
-        const currPlayer = await playersServices.getByUid(body.userId) // for case the user reconnect
+        let currPlayer = await playersServices.getByUid(body.userId) // for case the user reconnect
         if(currPlayer == null){
             await playersServices.create({userid:body.userId, posX:getRndInteger(0, curr_session.width), posY:getRndInteger(0, curr_session.height), session:curr_session, avatar:body.avatar})
+            currPlayer = await playersServices.getByUid(body.userId)
+            if(currPlayer == null){
+                return res.status(500).json({msg:"Player wasn't created"})
+            }
         }
         const players = await playersServices.getAllBySession(curr_session)
 
         const resBody : SessionModelLaunchRes = {
             treasures: treasures,
             players: players,
-            map: curr_session
+            map: curr_session,
+            currentPlayer: currPlayer
         }
         res.status(201).json(resBody)
     }catch (e) {

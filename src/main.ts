@@ -10,9 +10,11 @@ import {TreasuresModelUpdate} from "./models/treasures";
 import {ScoreServices} from "./services/socket/score.services";
 import { Socket } from 'socket.io';
 import SessionController from "./controllers/session";
+const cors = require('cors');
 
 const port: number = 3001
 const app = express()
+app.use(cors({origin:"*"}))
 app.use(express.json())
 const httpServer: Express = require('http').createServer(app)
 const io = require('socket.io')(httpServer, corsApp)
@@ -35,7 +37,8 @@ io.on('connection', (socket:Socket) => {
     console.log(`Received move event - Pos X: ${data.posX}, Pos Y: ${data.posY}, id: ${data.id}`);
     try {
       const updatedPlayer = await playersService.updatePos(data);
-      console.log('Player updated:', updatedPlayer);
+      const player = await playersService.getByUid(data.id);
+      console.log('Player updated:', updatedPlayer, player);
       io.emit('moveConfirmed', data)
     } catch (error) {
       console.error('Error updating player:', error);

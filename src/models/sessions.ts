@@ -17,4 +17,5 @@ export interface SessionModelLaunchRes{
     treasures: TreasuresDto[];
     players: PlayersDto[];
     map: SessionDto;
+    currentPlayer: PlayersDto;
 }
