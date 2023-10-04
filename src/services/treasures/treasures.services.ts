@@ -18,7 +18,8 @@ export class TreasuresServices{
             const newSession = treasureRepository.create({
                 posX: treasure.posX,
                 posY: treasure.posY,
-                img:treasure.img,
+                img: treasure.img,
+                value: treasure.value,
                 isClaim: false,
                 session: treasure.session,
                 value:treasure.value
