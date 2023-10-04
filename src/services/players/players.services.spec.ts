@@ -111,7 +111,8 @@ describe('PlayerService', () => {
         });
         it('should create a new player', async () => {
             // Mock the dependencies
-            const playerRepository: Repository<PlayersDto> = connection.getRepository(PlayersDto);
+            const playerRepository: Repository<PlayersDto> =
+                connection.getRepository(PlayersDto);
             // Create a valid PlayersModelRequest object
             const playerDto:PlayersDto = {
                 id: 1,
@@ -158,7 +159,7 @@ describe('PlayerService', () => {
                 expect(error.message).toBe('Error: Error');
             }
         });
-        test('should update a position and return the updated player', async () => {
+        it('should update a position and return the updated player', async () => {
             const playerRepository: Repository<PlayersDto> = connection.getRepository(PlayersDto);
             const playerModelUpdate = {
                 id: 1,

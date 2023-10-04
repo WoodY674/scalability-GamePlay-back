@@ -18,8 +18,10 @@ export class TreasuresServices{
             const newSession = treasureRepository.create({
                 posX: treasure.posX,
                 posY: treasure.posY,
+                img:treasure.img,
                 isClaim: false,
-                session: treasure.session
+                session: treasure.session,
+                value:treasure.value
             });
             return await treasureRepository.save(newSession);
         } catch (error: any) {
@@ -27,19 +29,11 @@ export class TreasuresServices{
         }
     }
 
-    async getAll() {
-        try {
-            const dataSource: DataSource = await this.dataSourceConfig;
-            const treasureRepository: Repository<TreasuresDto> = dataSource.getRepository(TreasuresDto);
-            return await treasureRepository.find();
-        } catch (error: any) {
-            throw new Error(error)
-        }
-    }
     async getAllUnclaimedBySession(curr_session:SessionDto) {
         try {
             const dataSource: DataSource = await this.dataSourceConfig;
-            const treasureRepository: Repository<TreasuresDto> = dataSource.getRepository(TreasuresDto);
+            const treasureRepository: Repository<TreasuresDto> =
+                dataSource.getRepository(TreasuresDto);
             return await treasureRepository.find({
                 select:{
                     id:true,
