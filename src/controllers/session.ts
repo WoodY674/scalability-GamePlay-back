@@ -20,7 +20,6 @@ function getRndInteger(min:number, max:number) {
 }
 
 /**
- * @TODO handle correctly the swagger
  * @swagger
  * components:
  *   schemas:
@@ -104,9 +103,8 @@ function getRndInteger(min:number, max:number) {
  *           items:
  *             $ref: '#/components/schemas/Player'
  *         map:
- *           type: object
- *           schema:
- *             $ref: '#/components/schemas/Map'
+ *           allOf:
+ *             - $ref: '#/components/schemas/Map'
  *
  * @swagger
  * /session/launch:

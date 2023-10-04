@@ -22,7 +22,6 @@ export class TreasuresServices{
                 value: treasure.value,
                 isClaim: false,
                 session: treasure.session,
-                value:treasure.value
             });
             return await treasureRepository.save(newSession);
         } catch (error: any) {
