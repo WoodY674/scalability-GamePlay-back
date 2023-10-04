@@ -8,7 +8,7 @@ export class TreasuresDto {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne((type) => SessionDto, (session) => session.id, { eager: true })
+    @ManyToOne((type) => SessionDto, (session) => session.id, { eager: true, onDelete: 'CASCADE' })
     @JoinColumn()
     session: SessionDto;
 

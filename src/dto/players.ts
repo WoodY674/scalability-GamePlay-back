@@ -10,7 +10,7 @@ export class PlayersDto {
     @Column({name: 'user_id', unique: true})
     userid: number
 
-    @ManyToOne((type) => SessionDto, (session) => session.id, { eager: true })
+    @ManyToOne((type) => SessionDto, (session) => session.id, { eager: true, onDelete: 'CASCADE' })
     @JoinColumn()
     session: SessionDto
 
