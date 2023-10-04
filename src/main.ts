@@ -3,8 +3,6 @@ import swaggerUi from 'swagger-ui-express'
 import { swaggerDocument } from './utils/swagger/swagger'
 import { corsApp } from './utils/cors/corsApp'
 import {PlayersModelUpdate} from "./models/players";
-import {Axis} from "./models/axis";
-import {DataSource} from "typeorm";
 import {PlayersService} from "./services/players/players.services";
 import {AppDataSource} from "./utils/database/database.config";
 import {TreasuresServices} from "./services/treasures/treasures.services";
@@ -13,7 +11,7 @@ import {ScoreServices} from "./services/socket/score.services";
 import { Socket } from 'socket.io';
 import SessionController from "./controllers/session";
 
-const port: number = 3000
+const port: number = 3001
 const app = express()
 app.use(express.json())
 const httpServer: Express = require('http').createServer(app)
@@ -34,7 +32,7 @@ io.on('connection', (socket:Socket) => {
   })
 
   socket.on('move', async (data: PlayersModelUpdate) => {
-    console.log(`Received move event - Axis X: ${data.posX}, Axis Y: ${data.posY}, id: ${data.id}`);
+    console.log(`Received move event - Pos X: ${data.posX}, Pos Y: ${data.posY}, id: ${data.id}`);
     try {
       const updatedPlayer = await playersService.updatePos(data);
       console.log('Player updated:', updatedPlayer);
