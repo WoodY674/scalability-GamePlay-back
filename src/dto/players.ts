@@ -7,8 +7,8 @@ export class PlayersDto {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
-    user_id: number
+    @Column({name: 'user_id'})
+    userid: number
 
     @ManyToOne((type) => SessionDto, (session) => session.id, { eager: true })
     @JoinColumn()
@@ -17,9 +17,9 @@ export class PlayersDto {
     @Column()
     avatar: string
 
-    @CreateDateColumn({name: 'pos_x'})
+    @Column({name: 'pos_x'})
     posX: number
 
-    @CreateDateColumn({name: 'pos_y'})
+    @Column({name: 'pos_y'})
     posY: number
 }
