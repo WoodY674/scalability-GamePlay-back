@@ -52,8 +52,9 @@ describe('TreasureService', () => {
     let treasuresService: TreasuresServices;
     let treasureModelRequest: TreasuresModelRequest;
     let treasureModelUpdate: TreasuresModelUpdate;
-    let session : SessionDto
+    let session: SessionDto
     let connection: DataSource;
+    let arrayTreasures : TreasuresDto[]
 
     beforeAll(async () => {
         // Initialisez la base de données de test une fois
@@ -91,6 +92,36 @@ describe('TreasureService', () => {
             width: 1,
             height: 1
         }
+        arrayTreasures = [
+            {
+                id: 1,
+                img: 'img1.png',
+                posX: 1,
+                posY: 1,
+                value: 5,
+                isClaim: false,
+                session: {
+                    id: 1,
+                    backgroundImg: 'backgroundImg',
+                    width: 1,
+                    height: 1
+                }
+            },
+            {
+                id: 2,
+                img: 'img2.png',
+                posX: 2,
+                posY: 2,
+                value: 10,
+                isClaim: false,
+                session: {
+                    id: 1,
+                    backgroundImg: 'backgroundImg',
+                    width: 1,
+                    height: 1
+                }
+            },
+        ];
     });
 
     beforeEach(async () => {
@@ -198,8 +229,8 @@ describe('TreasureService', () => {
             const treasureRepository: Repository<TreasuresDto> = connection.getRepository(TreasuresDto);
             const spy = jest
                 .spyOn(treasureRepository, 'find').mockImplementation(() => {
-                throw new Error('Error');
-            });
+                    throw new Error('Error');
+                });
             try {
                 await treasuresService.getAllUnclaimedBySession(session);
                 fail('Expected an error to be thrown');
@@ -209,37 +240,31 @@ describe('TreasureService', () => {
         });
         it('should return all treasure isClaim', async () => {
             const treasureRepository: Repository<TreasuresDto> = connection.getRepository(TreasuresDto);
-            const treasureDto: TreasuresDto = {
-                id: 2,
-                session: treasureModelRequest.session,
-                posX: treasureModelRequest.posX,
-                posY: treasureModelRequest.posY,
-                isClaim: false,
-                img: treasureModelRequest.img,
-                value: treasureModelRequest.value
-            }
-
-            const findSpy =
-                jest.spyOn(treasureRepository, 'find').mockReturnValue();
-
-            // Assert that the getRepository and save methods are called with the expected arguments
-            expect(connection.getRepository).toHaveBeenCalledWith(TreasuresDto);
-            expect(findSpy).toHaveBeenCalledWith({
-                img: "img.png",
-                isClaim: false,
-                posX: 1,
-                posY: 1,
-                session: {
-                    backgroundImg: "backgroundImg",
-                    height: 1,
-                    id: 1,
-                    width: 1
-                },
-                value: 5
+            const maPromesse :Promise<TreasuresDto[]> = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    return resolve(arrayTreasures);
+                }, 1000);
             });
-            expect(saveSpy).toHaveBeenCalled();
-            // Assert that the create method returns the expected value
-            expect(result).toEqual(treasureDto);
+            // Configurez le mock pour retourner les trésors non réclamés
+            const findSpy = jest.spyOn(treasureRepository, 'find').mockResolvedValue(maPromesse);
+            // Appelez la méthode à tester
+            const result = await treasuresService.getAllUnclaimedBySession(session);
+
+            // Vérifiez si la méthode find du mock Repository a été appelée avec les bons arguments
+            expect(findSpy).toHaveBeenCalledWith({
+                select: {
+                    id: true,
+                    img: true,
+                    posX: true,
+                    posY: true,
+                    value: true,
+                },
+                where: {
+                    isClaim: false,
+                    session: session,
+                },
+            });
+            expect(result).toEqual(arrayTreasures);
         });
     });
 

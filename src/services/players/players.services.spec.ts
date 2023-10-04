@@ -52,6 +52,8 @@ describe('PlayerService', () => {
     let playerModelRequest: PlayersModelRequest;
     let playerModelUpdate: PlayersModelUpdate;
     let connection: DataSource;
+    let session: SessionDto
+    let arrayPlayers : PlayersDto[]
 
     beforeAll(async () => {
         // Initialisez la base de données de test une fois
@@ -84,6 +86,40 @@ describe('PlayerService', () => {
             posX: 1,
             posY: 1
         }
+        session = {
+            id: 1,
+            backgroundImg: 'backgroundImg',
+            width: 1,
+            height: 1
+        }
+        arrayPlayers = [
+            {
+                id: 1,
+                avatar: 'img1.png',
+                userid:2,
+                posX: 1,
+                posY: 1,
+                session: {
+                    id: 1,
+                    backgroundImg: 'backgroundImg',
+                    width: 1,
+                    height: 1
+                }
+            },
+            {
+                id: 2,
+                avatar: 'img1.png',
+                userid:1,
+                posX: 1,
+                posY: 1,
+                session: {
+                    id: 1,
+                    backgroundImg: 'backgroundImg',
+                    width: 1,
+                    height: 1
+                }
+            },
+        ];
     });
 
     beforeEach(async () => {
@@ -176,6 +212,49 @@ describe('PlayerService', () => {
             const result = await playersService.updatePos(playerModelUpdate);
 
             expect(result).toEqual(updatedPlayer);
+        });
+    });
+
+    describe('getAllBySession', () => {
+        it('should try catch content', async () => {
+            const playerRepository: Repository<PlayersDto> = connection.getRepository(PlayersDto);
+            const spy = jest
+                .spyOn(playerRepository, 'find').mockImplementation(() => {
+                    throw new Error('Error');
+                });
+            try {
+                await playersService.getAllBySession(session);
+                fail('Expected an error to be thrown');
+            } catch (error: any) {
+                expect(error.message).toBe('Error: Error');
+            }
+        });
+        it('should return all treasure isClaim', async () => {
+            const playerRepository: Repository<PlayersDto> = connection.getRepository(PlayersDto);
+            const maPromesse :Promise<PlayersDto[]> = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    return resolve(arrayPlayers);
+                }, 1000);
+            });
+            // Configurez le mock pour retourner les trésors non réclamés
+            const findSpy = jest.spyOn(playerRepository, 'find').mockResolvedValue(maPromesse);
+            // Appelez la méthode à tester
+            const result = await playersService.getAllBySession(session);
+
+            // Vérifiez si la méthode find du mock Repository a été appelée avec les bons arguments
+            expect(findSpy).toHaveBeenCalledWith({
+                select: {
+                    id: true,
+                    userid: true,
+                    avatar: true,
+                    posX: true,
+                    posY: true,
+                },
+                where: {
+                    session:session
+                },
+            });
+            expect(result).toEqual(arrayPlayers);
         });
     });
 
