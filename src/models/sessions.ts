@@ -8,12 +8,6 @@ export interface SessionModelRequest {
     height: number;
 }
 
-export interface SessionModelFrontend{
-    width: number;
-    height: number;
-    backgroundImg: string;
-}
-
 export interface SessionModelLaunch{
     avatar: string;
     userId: number;
