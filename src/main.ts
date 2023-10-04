@@ -4,6 +4,8 @@ import { swaggerDocument } from './utils/swagger/swagger'
 import { corsApp } from './utils/cors/corsApp'
 import {Axis} from "./models/axis";
 import { Socket } from 'socket.io';
+import SessionController from "./controllers/session";
+
 const port: number = 3000
 const app = express()
 app.use(express.json())
@@ -11,6 +13,7 @@ const httpServer: Express = require('http').createServer(app)
 const io = require('socket.io')(httpServer, corsApp)
 app.use('/docs', swaggerUi.serve, swaggerDocument)
 
+app.use('/session', SessionController)
 
 io.on('connection', (socket:Socket) => {
   console.log('a user connected')

@@ -20,4 +20,10 @@ export class TreasuresDto {
 
     @Column({ name: 'is_claim' })
     isClaim: boolean = false;
+
+    @Column({ name: 'img' })
+    img: string;
+
+    @Column({ name: 'value' })
+    value: number;
 }
