@@ -2,7 +2,6 @@ import express, { type Express } from 'express'
 import swaggerUi from 'swagger-ui-express'
 import { swaggerDocument } from './utils/swagger/swagger'
 import { corsApp } from './utils/cors/corsApp'
-import { Socket } from 'socket.io';
 import {PlayersModelUpdate} from "./models/players";
 import {Axis} from "./models/axis";
 import {DataSource} from "typeorm";
