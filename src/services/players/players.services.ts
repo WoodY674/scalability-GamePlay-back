@@ -28,6 +28,25 @@ export class PlayersService {
       }
     }
 
+    async getByUid(uid:number) {
+        try {
+            const dataSource: DataSource = await this.dataSourceConfig;
+            const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
+            return await playerRepository.findOne({
+                select:{
+                    id: true,
+                    userid: true,
+                    avatar: true,
+                    posX: true,
+                    posY: true,
+                },
+                where:{
+                    userid: uid
+                }});
+        } catch (error: any) {
+            throw new Error(error)
+        }
+    }
     async getAllBySession(curr_session:SessionDto) {
         try {
             const dataSource: DataSource = await this.dataSourceConfig;

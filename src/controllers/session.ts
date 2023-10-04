@@ -173,9 +173,10 @@ SessionController.post("/launch", async function(req, res){
 
         treasures = await treasuresServices.getAllUnclaimedBySession(curr_session)
 
-        //@todo : call to service avatar
-        //const avatarRes = {}
-        await playersServices.create({userid:body.userId, posX:getRndInteger(0, curr_session.width), posY:getRndInteger(0, curr_session.height), session:curr_session, avatar:body.avatar})
+        const currPlayer = await playersServices.getByUid(body.userId) // for case the user reconnect
+        if(currPlayer == null){
+            await playersServices.create({userid:body.userId, posX:getRndInteger(0, curr_session.width), posY:getRndInteger(0, curr_session.height), session:curr_session, avatar:body.avatar})
+        }
         const players = await playersServices.getAllBySession(curr_session)
 
         const resBody : SessionModelLaunchRes = {
