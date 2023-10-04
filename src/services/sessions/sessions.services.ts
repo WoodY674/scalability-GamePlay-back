@@ -32,8 +32,8 @@ export class SessionsServices{
     async getAll() {
         try {
             const dataSource: DataSource = await this.dataSourceConfig;
-            const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
-            return await playerRepository.find();
+            const sessionRepository: Repository<SessionDto> = dataSource.getRepository(SessionDto);
+            return await sessionRepository.find();
         } catch (error: any) {
             throw new Error(error)
         }
@@ -42,8 +42,8 @@ export class SessionsServices{
     async delete(id: number) {
         try {
             const dataSource: DataSource = await this.dataSourceConfig;
-            const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
-            return await playerRepository.delete(id);
+            const sessionRepository: Repository<SessionDto> = dataSource.getRepository(SessionDto);
+            return await sessionRepository.delete(id);
         } catch (error: any) {
             throw new Error(error)
         }

@@ -14,7 +14,7 @@ export class PlayersService {
         const dataSource: DataSource = await this.dataSourceConfig;
         const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
         const newPlayer = playerRepository.create({
-            user_id: player.user_id,
+            userid: player.userid,
             session: player.session,
             avatar: player.avatar,
             posX: player.posX,
