@@ -2,12 +2,12 @@ import {Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryG
 import {SessionDto} from "./sessions";
 
 @Entity('players')
-@Index('player_pos',  ["players.pos_x", "players.pos_y"], {unique: true})
+@Index('player_pos',  ["userid", "posX", "posY"], {unique: true})
 export class PlayersDto {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({name: 'user_id'})
+    @Column({name: 'user_id', unique: true})
     userid: number
 
     @ManyToOne((type) => SessionDto, (session) => session.id, { eager: true })

@@ -2,7 +2,7 @@ import {Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryG
 import {SessionDto} from "./sessions";
 
 @Entity('treasures')
-@Index('treasures_pos',  ["treasures.pos_x", "treasures.pos_y"], {unique: true})
+@Index('treasures_pos',  ["posX", "posY"], {unique: true})
 export class TreasuresDto {
 
     @PrimaryGeneratedColumn()
