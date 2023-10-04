@@ -1,11 +1,6 @@
 import {DataSource, Repository} from "typeorm";
 import {SessionDto} from "../../dto/sessions";
-import {Utils} from "../../utils/utils";
 import {SessionModelRequest} from "../../models/sessions";
-import {RequestValidation} from "../../enum/enum";
-import {CustomMessageRequest} from "../../utils/message/custum.message";
-import {TreasuresDto} from "../../dto/treasures";
-import {PlayersDto} from "../../dto/players";
 
 export class SessionsServices{
     dataSourceConfig: Promise<DataSource>
@@ -20,8 +15,8 @@ export class SessionsServices{
             const sessionRepository: Repository<SessionDto> = dataSource.getRepository(SessionDto);
             const newSession = sessionRepository.create({
                 backgroundImg: session.backgroundImg,
-                scaleX: session.scaleX,
-                scaleY: session.scaleY
+                width: session.width,
+                height: session.height
             });
             return await sessionRepository.save(newSession);
         } catch (error: any) {
@@ -32,8 +27,8 @@ export class SessionsServices{
     async getAll() {
         try {
             const dataSource: DataSource = await this.dataSourceConfig;
-            const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
-            return await playerRepository.find();
+            const sessionRepository: Repository<SessionDto> = dataSource.getRepository(SessionDto);
+            return await sessionRepository.find();
         } catch (error: any) {
             throw new Error(error)
         }
@@ -42,8 +37,8 @@ export class SessionsServices{
     async delete(id: number) {
         try {
             const dataSource: DataSource = await this.dataSourceConfig;
-            const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
-            return await playerRepository.delete(id);
+            const sessionRepository: Repository<SessionDto> = dataSource.getRepository(SessionDto);
+            return await sessionRepository.delete(id);
         } catch (error: any) {
             throw new Error(error)
         }

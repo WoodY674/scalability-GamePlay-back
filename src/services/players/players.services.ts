@@ -1,6 +1,8 @@
 import {type DataSource, Repository} from 'typeorm'
 import {PlayersModelRequest, PlayersModelUpdate} from "../../models/players";
 import {PlayersDto} from "../../dto/players";
+import {TreasuresDto} from "../../dto/treasures";
+import {SessionDto} from "../../dto/sessions";
 
 export class PlayersService {
     dataSourceConfig: Promise<DataSource>
@@ -14,7 +16,7 @@ export class PlayersService {
         const dataSource: DataSource = await this.dataSourceConfig;
         const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
         const newPlayer = playerRepository.create({
-            user_id: player.user_id,
+            userid: player.userid,
             session: player.session,
             avatar: player.avatar,
             posX: player.posX,
@@ -24,6 +26,26 @@ export class PlayersService {
       } catch (error: any) {
         throw new Error(error)
       }
+    }
+
+    async getAllBySession(curr_session:SessionDto) {
+        try {
+            const dataSource: DataSource = await this.dataSourceConfig;
+            const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
+            return await playerRepository.find({
+                select:{
+                    id: true,
+                    userid: true,
+                    avatar: true,
+                    posX: true,
+                    posY: true,
+                },
+                where:{
+                    session:curr_session
+                }});
+        } catch (error: any) {
+            throw new Error(error)
+        }
     }
 
     async updatePos(player: PlayersModelUpdate) {
