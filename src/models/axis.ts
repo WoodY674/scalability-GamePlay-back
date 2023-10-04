@@ -1,4 +1,4 @@
 export interface Axis {
-    axisX: number;
-    axisY: number;
+    posX: number;
+    posY: number;
 }
