@@ -1,0 +1,31 @@
+version: '3.3'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: bearman
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: bearman
+      MYSQL_PASSWORD: bearman
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data_container:/data/var/lib/mysql
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: Node.js
+    restart: always
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+
+
+volumes:
+  mariadb_data_container:
