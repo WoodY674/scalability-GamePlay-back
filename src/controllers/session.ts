@@ -15,7 +15,7 @@ const treasuresServices: TreasuresServices = new TreasuresServices(AppDataSource
 
 let SessionController  = Router();
 
-function getRndInteger(min, max) {
+function getRndInteger(min:number, max:number) {
     return Math.floor(Math.random() * (max - min) ) + min;
 }
 
@@ -104,7 +104,9 @@ function getRndInteger(min, max) {
  *           items:
  *             $ref: '#/components/schemas/Player'
  *         map:
- *           type: $ref: '#/components/schemas/Map'
+ *           type: object
+ *           schema:
+ *             $ref: '#/components/schemas/Map'
  *
  * @swagger
  * /session/launch:

@@ -7,7 +7,7 @@ require('dotenv').config();
 const type : string  = process.env.DB_TYPE ?? 'mysql'
 
 export const AppDataSource = new DataSource({
-    type: process.env.DB_TYPE as 'mysql',
+    type: 'mariadb',//process.env.DB_TYPE ?? 'mysql',
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT) ?? 3306,
     username: process.env.DB_USER,
