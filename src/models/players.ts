@@ -10,7 +10,7 @@ export interface PlayersModelRequest {
 
 
 export interface PlayersModelUpdate {
-    id: number
+    userid: number
     posX: number
     posY: number
 }

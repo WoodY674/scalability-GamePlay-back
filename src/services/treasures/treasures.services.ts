@@ -55,8 +55,7 @@ export class TreasuresServices{
         try {
             const dataSource: DataSource = await this.dataSourceConfig;
             const treasureRepository: Repository<TreasuresDto> = dataSource.getRepository(TreasuresDto);
-            return await treasureRepository.save({
-                id: treasure.id,
+            return await treasureRepository.update({id:treasure.id}, {
                 isClaim: treasure.isClaim
             })
         } catch (error: any) {

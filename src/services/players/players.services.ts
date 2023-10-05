@@ -73,7 +73,7 @@ export class PlayersService {
       try {
         const dataSource: DataSource = await this.dataSourceConfig;
         const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
-        return await playerRepository.update({userid:player.id}, {posY:player.posY, posX:player.posX})
+        return await playerRepository.update({userid:player.userid}, {posY:player.posY, posX:player.posX})
       } catch (error: any) {
         throw new Error(error)
       }

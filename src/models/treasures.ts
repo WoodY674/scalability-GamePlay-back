@@ -12,3 +12,8 @@ export interface TreasuresModelUpdate {
     id: number;
     isClaim: boolean;
 }
+
+export interface TreasuresModelOnClaim {
+    treasureId: number;
+    userid: boolean;
+}

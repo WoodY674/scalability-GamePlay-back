@@ -6,7 +6,7 @@ import {PlayersModelUpdate} from "./models/players";
 import {PlayersService} from "./services/players/players.services";
 import {AppDataSource} from "./utils/database/database.config";
 import {TreasuresServices} from "./services/treasures/treasures.services";
-import {TreasuresModelUpdate} from "./models/treasures";
+import {TreasuresModelOnClaim, TreasuresModelUpdate} from "./models/treasures";
 import {ScoreServices} from "./services/socket/score.services";
 import { Socket } from 'socket.io';
 import SessionController from "./controllers/session";
@@ -34,25 +34,28 @@ io.on('connection', (socket:Socket) => {
   })
 
   socket.on('move', async (data: PlayersModelUpdate) => {
-    console.log(`Received move event - Pos X: ${data.posX}, Pos Y: ${data.posY}, id: ${data.id}`);
+    console.log(`Received move event - Pos X: ${data.posX}, Pos Y: ${data.posY}, userid: ${data.userid}`);
     try {
       const updatedPlayer = await playersService.updatePos(data);
-      const player = await playersService.getByUid(data.id);
+      const player = await playersService.getByUid(data.userid);
       console.log('Player updated:', updatedPlayer, player);
-      io.emit('moveConfirmed', data)
+      io.emit('moveConfirmed', player)
     } catch (error) {
       console.error('Error updating player:', error);
     }
   })
 
-  socket.on('claim', async (data: TreasuresModelUpdate, idPlayer: number) => {
-    console.log(`Received tresure to remove with id: ${data.id}`);
+  socket.on('claim', async (data:TreasuresModelOnClaim) => {
+    console.log(`Received tresure to remove with id: ${data.treasureId}`);
     try {
-      const claimedTreasurer = await treasuresService.updateClaim(data)
+      const claimedTreasurer = await treasuresService.updateClaim({id:data.treasureId, isClaim:true})
       console.log('Treasurer claimed:', claimedTreasurer);
-      io.emit('treasureClaimed', data)
+      io.emit('treasureClaimed', data.treasureId)
+      //io.emit('endGame')
+      io.emit('score', {score:5, userid:data.userid});
+
       const score = await scoreService.getScore();
-      io.emit('score', score!.score, idPlayer);
+      io.emit('score', {score:score!.score, userid:data.userid});
     } catch (error) {
       console.log('Error claim treasure:', error)
     }

@@ -160,7 +160,7 @@ SessionController.post("/launch", async function(req, res){
 
         if(sessions.length == 0){ //no session exist
             //@todo : call to service background map
-            const bgRes:BackgroundRes = {map:"", width:100, height:100, treasures:[{id:1, posX:1, posY:1, image:"", value:1}]}
+            const bgRes:BackgroundRes = {map:"", width:500, height:500, treasures:[{id:1, posX:getRndInteger(0, 500), posY:getRndInteger(0, 500), image:"", value:1}, {id:2, posX:getRndInteger(0, 500), posY:getRndInteger(0, 500), image:"", value:3}]}
             currSession = await sessionsServices.create({backgroundImg:bgRes.map, width:bgRes.width, height:bgRes.height})
 
             for (const el of bgRes.treasures) {
