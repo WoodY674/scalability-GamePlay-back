@@ -232,7 +232,7 @@ describe('TreasureService', () => {
                     throw new Error('Error');
                 });
             try {
-                await treasuresService.getAllUnclaimedBySession(session);
+                await treasuresService.getAllUnclaimedBySession(session.id);
                 fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).toBe('Error: Error');
@@ -248,7 +248,7 @@ describe('TreasureService', () => {
             // Configurez le mock pour retourner les trésors non réclamés
             const findSpy = jest.spyOn(treasureRepository, 'find').mockResolvedValue(maPromesse);
             // Appelez la méthode à tester
-            const result = await treasuresService.getAllUnclaimedBySession(session);
+            const result = await treasuresService.getAllUnclaimedBySession(session.id);
 
             // Vérifiez si la méthode find du mock Repository a été appelée avec les bons arguments
             expect(findSpy).toHaveBeenCalledWith({

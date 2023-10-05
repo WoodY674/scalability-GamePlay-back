@@ -29,7 +29,7 @@ export class TreasuresServices{
         }
     }
 
-    async getAllUnclaimedBySession(currSession:SessionDto) {
+    async getAllUnclaimedBySession(sessionId:number) {
         try {
             const dataSource: DataSource = await this.dataSourceConfig;
             const treasureRepository: Repository<TreasuresDto> =
@@ -44,7 +44,23 @@ export class TreasuresServices{
                 },
                 where:{
                     isClaim:false,
-                    session:currSession
+                    session:{
+                        id: sessionId
+                    }
+                }})
+        } catch (error: any) {
+            throw new Error(error)
+        }
+    }
+
+    async getById(id:number) {
+        try {
+            const dataSource: DataSource = await this.dataSourceConfig;
+            const treasureRepository: Repository<TreasuresDto> =
+                dataSource.getRepository(TreasuresDto);
+            return await treasureRepository.findOne({
+                where:{
+                    id:id
                 }})
         } catch (error: any) {
             throw new Error(error)

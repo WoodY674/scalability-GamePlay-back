@@ -171,7 +171,7 @@ SessionController.post("/launch", async function(req, res){
             currSession = sessions[sessions.length-1]
         }
 
-        treasures = await treasuresServices.getAllUnclaimedBySession(currSession)
+        treasures = await treasuresServices.getAllUnclaimedBySession(currSession.id)
 
         let currPlayer = await playersServices.getByUid(body.userId) // for case the user reconnect
         if(currPlayer == null){
@@ -180,7 +180,7 @@ SessionController.post("/launch", async function(req, res){
             if(currPlayer == null){
                 return res.status(500).json({msg:"Player wasn't created"})
             }
-            socket.ioobject.sockets.emit("newPlayer", {player: currPlayer});
+            socket.ioobject.sockets.emit(`newPlayer/${currSession.id}`, currPlayer);
 
         }
         const players = await playersServices.getOtherPlayersBySession(currSession, currPlayer.id)

@@ -6,7 +6,8 @@ import {PlayersModelUpdate} from "./models/players";
 import {PlayersService} from "./services/players/players.services";
 import {AppDataSource} from "./utils/database/database.config";
 import {TreasuresServices} from "./services/treasures/treasures.services";
-import {TreasuresModelOnClaim, TreasuresModelUpdate} from "./models/treasures";
+import {SessionsServices} from "./services/sessions/sessions.services";
+import {TreasuresModelOnClaim} from "./models/treasures";
 import {ScoreServices} from "./services/socket/score.services";
 import { Socket } from 'socket.io';
 import SessionController from "./controllers/session";
@@ -26,6 +27,7 @@ io.on('connection', (socket:Socket) => {
   console.log('a user connected')
   const playersService = new PlayersService(AppDataSource);
   const treasuresService = new TreasuresServices(AppDataSource)
+  const sessionService = new SessionsServices(AppDataSource)
   const scoreService = new ScoreServices()
 
   socket.on('message', (message:string) => {
@@ -39,7 +41,7 @@ io.on('connection', (socket:Socket) => {
       const updatedPlayer = await playersService.updatePos(data);
       const player = await playersService.getByUid(data.userid);
       console.log('Player updated:', updatedPlayer, player);
-      io.emit('moveConfirmed', player)
+      io.emit(`moveConfirmed/${player?.session.id}`, player)
     } catch (error) {
       console.error('Error updating player:', error);
     }
@@ -48,14 +50,22 @@ io.on('connection', (socket:Socket) => {
   socket.on('claim', async (data:TreasuresModelOnClaim) => {
     console.log(`Received tresure to remove with id: ${data.treasureId}`);
     try {
-      const claimedTreasurer = await treasuresService.updateClaim({id:data.treasureId, isClaim:true})
-      console.log('Treasurer claimed:', claimedTreasurer);
-      io.emit('treasureClaimed', data.treasureId)
-      //io.emit('endGame')
-      io.emit('score', {score:5, userid:data.userid});
+      const currentTreasure = await treasuresService.getById(data.treasureId)
+      const claimedTreasure = await treasuresService.updateClaim({id:data.treasureId, isClaim:true})
+      console.log('Treasure claimed:', currentTreasure);
 
+      io.emit(`treasureClaimed/${data.sessionId}`, data.treasureId)
+
+      const remainingTreasure = await treasuresService.getAllUnclaimedBySession(data.sessionId)
+      if(remainingTreasure.length == 0){
+        io.emit(`endGame/${data.sessionId}`, {});
+        await sessionService.delete(data.sessionId)
+      }
+
+      //@todo : call to score service
+      //currentTreasure?.value
       const score = await scoreService.getScore();
-      io.emit('score', {score:score!.score, userid:data.userid});
+      io.emit(`score/${data.userid}`, {score:score!.score, userid:data.userid});
     } catch (error) {
       console.log('Error claim treasure:', error)
     }
