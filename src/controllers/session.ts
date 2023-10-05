@@ -154,39 +154,39 @@ SessionController.post("/launch", async function(req, res){
     body.userId = req.body.userId
 
     try {
-        let curr_session:SessionDto
+        let currSession:SessionDto
         let treasures: TreasuresDto[]
         let sessions = await sessionsServices.getAll()
 
         if(sessions.length == 0){ //no session exist
             //@todo : call to service background map
             const bgRes:BackgroundRes = {map:"", width:100, height:100, treasures:[{id:1, posX:1, posY:1, image:"", value:1}]}
-            curr_session = await sessionsServices.create({backgroundImg:bgRes.map, width:bgRes.width, height:bgRes.height})
+            currSession = await sessionsServices.create({backgroundImg:bgRes.map, width:bgRes.width, height:bgRes.height})
 
             for (const el of bgRes.treasures) {
-                await treasuresServices.create({session:curr_session, posX:el.posX, posY:el.posY, img:el.image, value:el.value })
+                await treasuresServices.create({session:currSession, posX:el.posX, posY:el.posY, img:el.image, value:el.value })
             }
         }
         else{
-            curr_session = sessions[sessions.length-1]
+            currSession = sessions[sessions.length-1]
         }
 
-        treasures = await treasuresServices.getAllUnclaimedBySession(curr_session)
+        treasures = await treasuresServices.getAllUnclaimedBySession(currSession)
 
         let currPlayer = await playersServices.getByUid(body.userId) // for case the user reconnect
         if(currPlayer == null){
-            await playersServices.create({userid:body.userId, posX:getRndInteger(0, curr_session.width), posY:getRndInteger(0, curr_session.height), session:curr_session, avatar:body.avatar})
+            await playersServices.create({userid:body.userId, posX:getRndInteger(0, currSession.width), posY:getRndInteger(0, currSession.height), session:currSession, avatar:body.avatar})
             currPlayer = await playersServices.getByUid(body.userId)
             if(currPlayer == null){
                 return res.status(500).json({msg:"Player wasn't created"})
             }
         }
-        const players = await playersServices.getAllBySession(curr_session)
+        const players = await playersServices.getOtherPlayersBySession(currSession, currPlayer.id)
 
         const resBody : SessionModelLaunchRes = {
             treasures: treasures,
             players: players,
-            map: curr_session,
+            map: currSession,
             currentPlayer: currPlayer
         }
         res.status(201).json(resBody)

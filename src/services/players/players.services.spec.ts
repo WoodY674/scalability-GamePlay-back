@@ -223,7 +223,7 @@ describe('PlayerService', () => {
                     throw new Error('Error');
                 });
             try {
-                await playersService.getAllBySession(session);
+                await playersService.getOtherPlayersBySession(session, 1);
                 fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).toBe('Error: Error');
@@ -239,7 +239,7 @@ describe('PlayerService', () => {
             // Configurez le mock pour retourner les trésors non réclamés
             const findSpy = jest.spyOn(playerRepository, 'find').mockResolvedValue(maPromesse);
             // Appelez la méthode à tester
-            const result = await playersService.getAllBySession(session);
+            const result = await playersService.getOtherPlayersBySession(session, arrayPlayers[0].id);
 
             // Vérifiez si la méthode find du mock Repository a été appelée avec les bons arguments
             expect(findSpy).toHaveBeenCalledWith({
@@ -254,7 +254,7 @@ describe('PlayerService', () => {
                     session:session
                 },
             });
-            expect(result).toEqual(arrayPlayers);
+            expect(result.length).toEqual(arrayPlayers.length -1);
         });
     });
 

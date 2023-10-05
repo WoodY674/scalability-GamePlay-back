@@ -1,4 +1,4 @@
-import {type DataSource, Repository} from 'typeorm'
+import {type DataSource, Not, Repository} from 'typeorm'
 import {PlayersModelRequest, PlayersModelUpdate} from "../../models/players";
 import {PlayersDto} from "../../dto/players";
 import {TreasuresDto} from "../../dto/treasures";
@@ -47,7 +47,7 @@ export class PlayersService {
             throw new Error(error)
         }
     }
-    async getAllBySession(curr_session:SessionDto) {
+    async getOtherPlayersBySession(currSession:SessionDto, currUserId:number) {
         try {
             const dataSource: DataSource = await this.dataSourceConfig;
             const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);
@@ -60,7 +60,8 @@ export class PlayersService {
                     posY: true,
                 },
                 where:{
-                    session:curr_session
+                    session:currSession,
+                    id: Not(currUserId)
                 }});
         } catch (error: any) {
             throw new Error(error)
