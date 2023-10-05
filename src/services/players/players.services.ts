@@ -47,6 +47,7 @@ export class PlayersService {
             throw new Error(error)
         }
     }
+
     async getOtherPlayersBySession(currSession:SessionDto, currUserId:number) {
         try {
             const dataSource: DataSource = await this.dataSourceConfig;

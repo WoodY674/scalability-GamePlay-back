@@ -177,7 +177,7 @@ describe('SessionService', () => {
         });
     });
 
-    describe('getAllUnclaimedBySession', () => {
+    describe('getAll', () => {
         it('should try catch content', async () => {
             const sessionsRepository: Repository<SessionDto> = connection.getRepository(SessionDto);
             const spy = jest
