@@ -12,7 +12,7 @@ import {RequestValidation} from "../enum/enum";
 const sessionsServices: SessionsServices = new SessionsServices(AppDataSource);
 const playersServices: PlayersService = new PlayersService(AppDataSource);
 const treasuresServices: TreasuresServices = new TreasuresServices(AppDataSource);
-
+const socket = require('../main');
 let SessionController  = Router();
 
 function getRndInteger(min:number, max:number) {
@@ -180,6 +180,8 @@ SessionController.post("/launch", async function(req, res){
             if(currPlayer == null){
                 return res.status(500).json({msg:"Player wasn't created"})
             }
+            socket.ioobject.sockets.emit("newPlayer", {player: currPlayer});
+
         }
         const players = await playersServices.getOtherPlayersBySession(currSession, currPlayer.id)
 

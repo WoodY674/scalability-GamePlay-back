@@ -14,12 +14,12 @@ const cors = require('cors');
 
 const port: number = 3001
 const app = express()
-app.use(cors({origin:"*"}))
-app.use(express.json())
 const httpServer: Express = require('http').createServer(app)
 const io = require('socket.io')(httpServer, corsApp)
-app.use('/docs', swaggerUi.serve, swaggerDocument)
 
+app.use(cors({origin:"*"}))
+app.use(express.json())
+app.use('/docs', swaggerUi.serve, swaggerDocument)
 app.use('/session', SessionController)
 
 io.on('connection', (socket:Socket) => {
@@ -64,3 +64,5 @@ io.on('connection', (socket:Socket) => {
 })
 
 httpServer.listen(port, () => { console.log(`listening on port ${port}`) })
+
+module.exports.ioobject = io;
