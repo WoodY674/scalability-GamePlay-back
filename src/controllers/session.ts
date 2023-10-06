@@ -9,9 +9,12 @@ import {TreasuresDto} from "../dto/treasures";
 import {SessionModelLaunch, SessionModelLaunchRes} from "../models/sessions";
 import {Utils} from "../utils/utils";
 import {RequestValidation} from "../enum/enum";
+import {BackgroundService} from "../services/background/background.service";
 const sessionsServices: SessionsServices = new SessionsServices(AppDataSource);
 const playersServices: PlayersService = new PlayersService(AppDataSource);
 const treasuresServices: TreasuresServices = new TreasuresServices(AppDataSource);
+const backgroundService = new BackgroundService()
+
 const socket = require('../main');
 let SessionController  = Router();
 
@@ -159,8 +162,12 @@ SessionController.post("/launch", async function(req, res){
         let sessions = await sessionsServices.getAll()
 
         if(sessions.length == 0){ //no session exist
-            //@todo : call to service background map
-            const bgRes:BackgroundRes = {map:"", width:500, height:500, treasures:[{id:1, posX:getRndInteger(0, 500), posY:getRndInteger(0, 500), image:"", value:1}, {id:2, posX:getRndInteger(0, 500), posY:getRndInteger(0, 500), image:"", value:3}]}
+            let bgRes:BackgroundRes
+            try{
+                bgRes = await backgroundService.getBackGround()
+            }catch (e){
+                bgRes = {map:"", width:500, height:500, treasures:[{id:1, posX:getRndInteger(0, 500), posY:getRndInteger(0, 500), image:"", value:1}, {id:2, posX:getRndInteger(0, 500), posY:getRndInteger(0, 500), image:"", value:3}]}
+            }
             currSession = await sessionsServices.create({backgroundImg:bgRes.map, width:bgRes.width, height:bgRes.height})
 
             for (const el of bgRes.treasures) {
@@ -181,7 +188,6 @@ SessionController.post("/launch", async function(req, res){
                 return res.status(500).json({msg:"Player wasn't created"})
             }
             socket.ioobject.sockets.emit(`newPlayer/${currSession.id}`, currPlayer);
-
         }
         const players = await playersServices.getOtherPlayersBySession(currSession, currPlayer.id)
 

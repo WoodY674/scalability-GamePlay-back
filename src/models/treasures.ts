@@ -15,6 +15,7 @@ export interface TreasuresModelUpdate {
 
 export interface TreasuresModelOnClaim {
     treasureId: number;
-    userid: boolean;
+    userid: number;
+    userMail: string;
     sessionId: number;
 }

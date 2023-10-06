@@ -1,13 +1,22 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import {Scores} from '../../models/scores'
+export interface PostBody{
+    id: number,
+    email: string,
+    avatar: string,
+    score: number,
+    sessionId: number,
+}
+
 export class ScoreServices{
-    async getScore(){
+    host = "http://" + (process.env.SERVICE_SCORE ?? "serviceScore")
+
+    async getScore(body:PostBody) : Promise<Scores>{
         try {
-            const response: AxiosResponse = await axios.get('https://api.example.com/users');
+            const response: AxiosResponse = await axios.post(`${this.host}/ranking`, body);
             const scoreData = response.data;
-            const score = new Scores(scoreData.id,scoreData.email,scoreData.score,scoreData.avatar)
-            console.log('Score data:', score);
-            return score
+            console.log('Score data:', scoreData);
+            return scoreData
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError;
@@ -15,6 +24,7 @@ export class ScoreServices{
             } else {
                 console.error('Error:', error);
             }
+            throw error
         }
     }
 }

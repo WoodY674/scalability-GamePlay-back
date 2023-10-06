@@ -1,13 +1,14 @@
-import axios, {AxiosError, AxiosResponse} from "axios/index";
-import {Scores} from "../../models/scores";
+import axios, {AxiosError} from "axios/index";
 import {BackgroundRes} from "../../models/api";
 
 export class BackgroundService{
-    async getBackGround(){
+    //@TODO : get the background service route
+    host = "http://" + (process.env.SERVICE_BACKGROUND ?? "serviceBackground")
+
+    async getBackGround() : Promise<BackgroundRes>{
         try {
-            const response = await axios.get('https://api.example.com/users');
-            const backgroundData : BackgroundRes = response.data;
-            return backgroundData
+            const response = await axios.get(`${this.host}/generate`);
+            return response.data
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError;
@@ -15,6 +16,7 @@ export class BackgroundService{
             } else {
                 console.error('Error:', error);
             }
+            throw error
         }
     }
 }
