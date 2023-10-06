@@ -25,13 +25,11 @@ app.get('/metrics', async (req, res) => {
     }
 });
 
-
 app.use(cors(corsApp))
 app.use(express.json())
 app.use('/docs', swaggerUi.serve, swaggerDocument)
 app.use('/session', SessionController)
 require("./controllers/socket")(io)
-
 
 httpServer.listen(port, () => { console.log(`listening on port ${port} ${process.argv[2]}`) })
 
