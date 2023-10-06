@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-config
+data:
+  MYSQL_DATABASE: {{ .Values.gameplaydb.auth.database }}
+  MYSQL_USER: {{ .Values.gameplaydb.auth.username }}
+  MYSQL_PASSWORD: {{ .Values.gameplaydb.auth.password }}
+  MYSQL_PORT: "3306"
+  MYSQL_HOST: {{ .Values.gameplaydb.auth.host }}

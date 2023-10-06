@@ -1,11 +1,11 @@
-# Default values for gameplay-back.
+# Default values for gameplay-api.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: fadyy/scalabilite-gameplay-back
+  repository: anthlr/scalabilite-gameplay-back
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -38,7 +38,32 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 3000
+  port: 3001
+
+
+
+auth:
+  username: gameplay
+  password: gameplay
+  database: gameplay
+  rootPassword: gameplay
+
+gameplaydb:
+  auth:
+    username: "gameplay"
+    password: "gameplay"
+    database: "gameplay"
+    rootPassword: "gameplay"
+    host: "gameplay2-gameplaydb"
+  enabled: true
+  configMap:
+    name: mariadb-config
+
+#    env:
+#      MYSQL_ROOT_PASSWORD: { { .Files.Get "templates/mariadb-configmap.yaml" | fromYaml "data.MYSQL_ROOT_PASSWORD" } }
+#      MYSQL_DATABASE: { { .Files.Get "templates/mariadb-configmap.yaml" | fromYaml "data.MYSQL_DATABASE" } }
+#      MYSQL_USER: { { .Files.Get "templates/mariadb-configmap.yaml" | fromYaml "data.MYSQL_USER" } }
+#      MYSQL_PASSWORD: { { .Files.Get "templates/mariadb-configmap.yaml" | fromYaml "data.MYSQL_PASSWORD" } }
 
 ingress:
   enabled: false
@@ -80,3 +105,4 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+

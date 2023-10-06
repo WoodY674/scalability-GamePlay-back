@@ -8,7 +8,7 @@ const type : string  = process.env.DB_TYPE ?? 'mysql'
 
 export const AppDataSource = new DataSource({
     type: 'mariadb',//process.env.DB_TYPE ?? 'mysql',
-    host: process.env.DB_HOST,
+    host: process.env.DB_HOST ?? 'mariadb',
     port: Number(process.env.DB_PORT) ?? 3306,
     username: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
