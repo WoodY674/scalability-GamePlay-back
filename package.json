@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/main.ts",
+    "start:prod": "ts-node src/main.ts false",
+    "start": "ts-node src/main.ts true",
     "test": "npx jest"
   },
   "keywords": [
@@ -43,6 +44,7 @@
     "jest-mock-extended": "^3.0.5",
     "mariadb": "^3.2.1",
     "mysql": "^2.18.1",
+    "prom-client": "^14.2.0",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
     "sqlite3": "^5.1.6",
