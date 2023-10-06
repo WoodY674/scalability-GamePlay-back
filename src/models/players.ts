@@ -1,7 +1,7 @@
 import {SessionDto} from "../dto/sessions";
 
 export interface PlayersModelRequest {
-    userid: number
+    userid: string
     session: SessionDto
     avatar: string
     posX: number
@@ -10,7 +10,7 @@ export interface PlayersModelRequest {
 
 
 export interface PlayersModelUpdate {
-    userid: number
+    userid: string
     posX: number
     posY: number
 }

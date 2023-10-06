@@ -1,7 +1,6 @@
 import {type DataSource, Not, Repository} from 'typeorm'
 import {PlayersModelRequest, PlayersModelUpdate} from "../../models/players";
 import {PlayersDto} from "../../dto/players";
-import {TreasuresDto} from "../../dto/treasures";
 import {SessionDto} from "../../dto/sessions";
 
 export class PlayersService {
@@ -28,7 +27,7 @@ export class PlayersService {
       }
     }
 
-    async getByUid(uid:number) {
+    async getByUid(uid: string) {
         try {
             const dataSource: DataSource = await this.dataSourceConfig;
             const playerRepository: Repository<PlayersDto> = dataSource.getRepository(PlayersDto);

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import {Scores} from '../../models/scores'
 export interface PostBody{
-    id: number,
+    id: string,
     email: string,
     avatar: string,
     score: number,
