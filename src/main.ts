@@ -13,13 +13,6 @@ const io = require('socket.io')(httpServer, corsApp)
 
 // Créez un registre Prometheus
 const register = new prometheus.Registry();
-// Créez une métrique personnalisée (Gauge)
-const customMetric = new prometheus.Gauge({
-    name: 'my_custom_metric',
-    help: 'A custom metric for my application',
-    registers: [register], // Associez la métrique au registre
-});
-// Collect default metrics
 prometheus.collectDefaultMetrics({ register });
 app.get('/metrics', async (req, res) => {
     try {
