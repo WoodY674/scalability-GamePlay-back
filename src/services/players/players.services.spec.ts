@@ -90,7 +90,7 @@ describe('PlayerService', () => {
             posY: 1
         }
         playerModelUpdate = {
-            id: 1,
+            userid: 1,
             posX: 1,
             posY: 1
         }
@@ -228,18 +228,18 @@ describe('PlayerService', () => {
                 }, 1000);
             });
             const playerModelUpdate = {
-                id: 1,
+                userid: 1,
                 posX: 10,
                 posY: 20
             };
             const updatedPlayer: PlayersModelUpdate = {
-                id: playerModelUpdate.id,
+                userid: playerModelUpdate.userid,
                 posX: playerModelUpdate.posX,
                 posY: playerModelUpdate.posY
             };
             jest.spyOn(playerRepository, 'update').mockResolvedValue(maPromesse);
 
-            const result = await playersService.updatePos(playerModelUpdate);
+            const result = await playersService.updatePos(updatedPlayer);
 
             expect(result).toEqual({
                 raw: 3,
