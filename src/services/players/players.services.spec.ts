@@ -78,7 +78,7 @@ describe('PlayerService', () => {
         });
         playersService = new PlayersService(connection.initialize());
         playerModelRequest = {
-            userid: 1,
+            userid: crypto.randomUUID(),
             session: {
                 id: 1,
                 backgroundImg: 'backgroundImg',
@@ -90,7 +90,7 @@ describe('PlayerService', () => {
             posY: 1
         }
         playerModelUpdate = {
-            userid: 1,
+            userid: crypto.randomUUID(),
             posX: 1,
             posY: 1
         }
@@ -104,7 +104,7 @@ describe('PlayerService', () => {
             {
                 id: 1,
                 avatar: 'img1.png',
-                userid: 2,
+                userid: crypto.randomUUID(),
                 posX: 1,
                 posY: 1,
                 session: {
@@ -117,7 +117,7 @@ describe('PlayerService', () => {
             {
                 id: 2,
                 avatar: 'img1.png',
-                userid: 1,
+                userid: crypto.randomUUID(),
                 posX: 1,
                 posY: 1,
                 session: {
@@ -130,7 +130,7 @@ describe('PlayerService', () => {
             {
                 id: 3,
                 avatar: 'img1.png',
-                userid: 10,
+                userid: crypto.randomUUID(),
                 posX: 10,
                 posY: 10,
                 session: {
@@ -228,7 +228,7 @@ describe('PlayerService', () => {
                 }, 1000);
             });
             const playerModelUpdate = {
-                userid: 1,
+                userid: crypto.randomUUID(),
                 posX: 10,
                 posY: 20
             };

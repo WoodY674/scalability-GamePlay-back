@@ -14,7 +14,7 @@ const sessionsServices: SessionsServices = new SessionsServices(AppDataSource);
 const playersServices: PlayersService = new PlayersService(AppDataSource);
 const treasuresServices: TreasuresServices = new TreasuresServices(AppDataSource);
 const backgroundService = new BackgroundService()
-
+const crypto = require("crypto")
 const socket = require('../main');
 let SessionController  = Router();
 
@@ -66,14 +66,14 @@ function getRndInteger(min:number, max:number) {
  *           type: number
  *           description: player's position on y axe
  *         userId:
- *           type: number
+ *           type: UUID
  *           description: player's user id
  *       example:
  *         id: 1
  *         avatar: https://avatar/img/1234.png
  *         posX: 1
  *         posY: 1
- *         userId: 1
+ *         userId: 21cd7da4-9398-480a-a4ef-d8ea6e7fafb1
  *     Map:
  *       type: object
  *       properties:
@@ -123,10 +123,10 @@ function getRndInteger(min:number, max:number) {
  *               avatar:
  *                 type: string
  *               userId:
- *                 type: number
+ *                 type: UUID
  *             example:
  *               avatar: "http://avatar.com/1234.png"
- *               userId: 1
+ *               userId: 21cd7da4-9398-480a-a4ef-d8ea6e7fafb1
  *     responses:
  *       201:
  *         description: Utilisateur connecter avec succès
@@ -141,7 +141,7 @@ function getRndInteger(min:number, max:number) {
 SessionController.post("/launch", async function(req, res){
     const body:SessionModelLaunch = {
         avatar:"",
-        userId: 0
+        userId:""
     }
     const checkingBody = Utils.validBodyRequest(req, body)
     switch (checkingBody){
