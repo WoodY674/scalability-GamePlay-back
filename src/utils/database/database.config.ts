@@ -10,9 +10,9 @@ export const AppDataSource = new DataSource({
     type: 'mariadb',//process.env.DB_TYPE ?? 'mysql',
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT) ?? 3306,
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
+    username: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
     synchronize: true,
     //logging: true,
     entities: [
