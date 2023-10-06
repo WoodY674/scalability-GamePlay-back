@@ -10,8 +10,8 @@ env:
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  DOCKER_IMAGE_NAME_TEST: anthlr/scalabilite-gameplay-front:$GITHUB_RUN_ID
-  DOCKER_IMAGE_NAME_LATEST: anthlr/scalabilite-gameplay-front:latest
+  DOCKER_IMAGE_NAME_TEST: anthlr/scalabilite-gameplay-back:$GITHUB_RUN_ID
+  DOCKER_IMAGE_NAME_LATEST: anthlr/scalabilite-gameplay-back:latest
 
 jobs:
   Build-Test-Image:
