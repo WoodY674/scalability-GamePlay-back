@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scalabiliteGameplayFront
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scalabiliteGameplayBack
+  template:
+    metadata:
+      labels:
+        app: scalabiliteGameplayBack
+    spec:
+      containers:
+        - name: scalabiliteGameplayBack-nextjs-container
+          image: fadyy/scalabilite-gameplay-back:latest
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: app-volume
+              mountPath: /app
+      volumes:
+        - name: app-volume
+          hostPath:
+            path: /app
