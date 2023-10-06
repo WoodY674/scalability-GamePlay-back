@@ -1,4 +1,4 @@
-import axios, {AxiosError} from "axios/index";
+import axios, {AxiosError} from "axios";
 import {BackgroundRes} from "../../models/api";
 
 export class BackgroundService{
