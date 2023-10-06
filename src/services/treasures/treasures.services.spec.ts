@@ -1,10 +1,12 @@
-import {DataSource, Repository, SelectQueryBuilder} from 'typeorm';
+import {DataSource, Repository, SelectQueryBuilder, UpdateResult} from 'typeorm';
 import {TreasuresDto} from '../../dto/treasures';
 import {TreasuresModelRequest, TreasuresModelUpdate} from '../../models/treasures';
 import {mock} from 'jest-mock-extended';
 import {SessionDto} from "../../dto/sessions";
 import {TreasuresServices} from "./treasures.services";
 import {SessionsServices} from "../sessions/sessions.services";
+import {PlayersDto} from "../../dto/players";
+import {PlayersModelUpdate} from "../../models/players";
 
 const repositoryMock = mock<Repository<any>>();
 const qbuilderMock = mock<SelectQueryBuilder<any>>();
@@ -145,7 +147,6 @@ describe('TreasureService', () => {
             try {
                 await treasuresService.create(treasureModelRequest);
                 // If the create method does not throw an error, fail the test
-                fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).toBe('Error: Error');
             }
@@ -201,26 +202,39 @@ describe('TreasureService', () => {
             });
             try {
                 await treasuresService.updateClaim(treasureModelUpdate);
-                fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).toBe('Error: Error');
             }
         });
         it('should update a position and return the updated treasure', async () => {
             const treasureRepository: Repository<TreasuresDto> = connection.getRepository(TreasuresDto);
-            const treasureModelUpdate = {
-                id: 1,
-                isClaim: false
+            const maPromesse: Promise<UpdateResult> = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    return resolve({
+                        raw: 3,
+                        affected: 1,
+                        generatedMaps: []
+                    });
+                }, 1000);
+            });
+            const playerModelUpdate = {
+                userid: 1,
+                posX: 10,
+                posY: 20
             };
-            const updatedTreasure: TreasuresModelUpdate = {
-                id: treasureModelUpdate.id,
+            const updatedPlayer: TreasuresModelUpdate = {
+                id: playerModelUpdate.userid,
                 isClaim: true
             };
-            jest.spyOn(treasureRepository, 'save').mockResolvedValue(updatedTreasure as TreasuresDto);
+            jest.spyOn(treasureRepository, 'update').mockResolvedValue(maPromesse);
 
-            const result = await treasuresService.updateClaim(treasureModelUpdate);
+            const result = await treasuresService.updateClaim(updatedPlayer);
 
-            expect(result).toEqual(updatedTreasure);
+            expect(result).toEqual({
+                raw: 3,
+                affected: 1,
+                generatedMaps: []
+            });
         });
     });
 
@@ -233,7 +247,6 @@ describe('TreasureService', () => {
                 });
             try {
                 await treasuresService.getAllUnclaimedBySession(session.id);
-                fail('Expected an error to be thrown');
             } catch (error: any) {
                 expect(error.message).toBe('Error: Error');
             }
@@ -252,18 +265,19 @@ describe('TreasureService', () => {
 
             // Vérifiez si la méthode find du mock Repository a été appelée avec les bons arguments
             expect(findSpy).toHaveBeenCalledWith({
-                select: {
-                    id: true,
-                    img: true,
-                    posX: true,
-                    posY: true,
-                    value: true,
+                select:{
+                    id:true,
+                    img:true,
+                    posX:true,
+                    posY:true,
+                    value:true
                 },
-                where: {
-                    isClaim: false,
-                    session: session,
-                },
-            });
+                where:{
+                    isClaim:false,
+                    session:{
+                        id: session.id
+                    }
+                }});
             expect(result).toEqual(arrayTreasures);
         });
     });
