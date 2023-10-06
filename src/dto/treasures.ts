@@ -1,13 +1,14 @@
-import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {SessionDto} from "./sessions";
 
 @Entity('treasures')
+@Index('treasures_pos',  ["posX", "posY"], {unique: true})
 export class TreasuresDto {
 
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne((type) => SessionDto, (session) => session.id, { eager: true })
+    @ManyToOne((type) => SessionDto, (session) => session.id, { eager: true, onDelete: 'CASCADE' })
     @JoinColumn()
     session: SessionDto;
 
@@ -19,4 +20,10 @@ export class TreasuresDto {
 
     @Column({ name: 'is_claim' })
     isClaim: boolean = false;
+
+    @Column({ name: 'img' })
+    img: string;
+
+    @Column({ name: 'value' })
+    value: number;
 }

@@ -1,4 +1,6 @@
 export interface Scores{
-    player_id: number;
-    increment: number;
+    id: number;
+    email: string;
+    score: number;
+    avatar: string;
 }

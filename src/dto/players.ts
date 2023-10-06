@@ -1,25 +1,25 @@
-import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm'
-import {Session} from "inspector";
+import {Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm'
 import {SessionDto} from "./sessions";
 
 @Entity('players')
+@Index('player_pos',  ["userid", "posX", "posY"], {unique: true})
 export class PlayersDto {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
-    user_id: number
+    @Column({name: 'user_id', unique: true})
+    userid: number
 
-    @ManyToOne((type) => SessionDto, (session) => session.id, { eager: true })
+    @ManyToOne((type) => SessionDto, (session) => session.id, { eager: true, onDelete: 'CASCADE' })
     @JoinColumn()
     session: SessionDto
 
     @Column()
     avatar: string
 
-    @CreateDateColumn({name: 'pos_x'})
+    @Column({name: 'pos_x'})
     posX: number
 
-    @CreateDateColumn({name: 'pos_y'})
+    @Column({name: 'pos_y'})
     posY: number
 }

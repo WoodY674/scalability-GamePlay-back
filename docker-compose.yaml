@@ -1,0 +1,70 @@
+version: '3.3'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data_container:/data/var/lib/mysql
+    networks:
+      - gameplay
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: Node.js
+    restart: always
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    networks:
+      - gameplay
+
+  mariadb-exporter:
+    image: prom/mysqld-exporter
+    container_name: mariadb-exporter
+    ports:
+      - "9104:9104"
+    restart: unless-stopped
+    command:
+      - "--mysqld.username=bearman"
+      - "--mysqld.address=mariadb:3306"
+    networks:
+      - gameplay
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - gameplay
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3010:3000"
+    networks:
+      - gameplay
+    env_file:
+      - .env
+    depends_on:
+      - prometheus
+
+volumes:
+  mariadb_data_container:
+    driver: local
+
+networks:
+  gameplay:
+    driver: bridge
