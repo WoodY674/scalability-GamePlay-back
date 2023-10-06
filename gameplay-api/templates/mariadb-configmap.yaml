@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: mariadb-config
 data:
-  MYSQL_DATABASE: {{ .Values.gameplaydb.auth.database }}
-  MYSQL_USER: {{ .Values.gameplaydb.auth.username }}
-  MYSQL_PASSWORD: {{ .Values.gameplaydb.auth.password }}
+  MYSQL_DATABASE: {{ .Values.mariadb.auth.database }}
+  MYSQL_USER: {{ .Values.mariadb.auth.username }}
+  MYSQL_PASSWORD: {{ .Values.mariadb.auth.password }}
   MYSQL_PORT: "3306"
-  MYSQL_HOST: {{ .Values.gameplaydb.auth.host }}
+  MYSQL_HOST: "mariadb"

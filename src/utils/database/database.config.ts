@@ -4,15 +4,20 @@ import {PlayersDto} from '../../dto/players'
 import {SessionDto} from "../../dto/sessions";
 import {TreasuresDto} from "../../dto/treasures";
 require('dotenv').config();
-const type : string  = process.env.DB_TYPE ?? 'mysql'
+const type: "mysql" | "mariadb"  = process.env.MYSQL_TYPE as any ?? 'mysql';
+const host : string  = process.env.MYSQL_HOST ?? 'gameplaydb-XX'
+const port : number  = Number(process.env.MYSQL_PORT) ?? 3306
+const username= process.env.MYSQL_USER ?? 'root'
+const password= process.env.MYSQL_PASSWORD ?? 'root'
+const database= process.env.MYSQL_DATABASE ?? 'gameplaydb'
 
 export const AppDataSource = new DataSource({
-    type: 'mariadb',//process.env.DB_TYPE ?? 'mysql',
-    host: process.env.DB_HOST ?? 'mariadb',
-    port: Number(process.env.DB_PORT) ?? 3306,
-    username: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
+    type: type,
+    host: host,
+    port: port,
+    username: username,
+    password: password,
+    database:  database,
     synchronize: true,
     //logging: true,
     entities: [
