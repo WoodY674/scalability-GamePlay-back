@@ -232,6 +232,7 @@ describe('PlayerService', () => {
                 posX: 10,
                 posY: 20
             };
+            //commentaire
             const updatedPlayer: PlayersModelUpdate = {
                 userid: playerModelUpdate.userid,
                 posX: playerModelUpdate.posX,
