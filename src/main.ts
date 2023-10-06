@@ -26,9 +26,6 @@ app.get('/metrics', async (req, res) => {
 });
 
 
-
-
-
 app.use(cors(corsApp))
 app.use(express.json())
 app.use('/docs', swaggerUi.serve, swaggerDocument)
