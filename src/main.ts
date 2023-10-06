@@ -18,6 +18,8 @@ app.use('/session', SessionController)
 app.use('/metrics', MetricsController)
 require("./controllers/socket")(io)
 
-httpServer.listen(port, () => { console.log(`listening on port ${port} ${process.argv[2]}`) })
+httpServer.listen(port, () => { console.log(`listening on port ${port} ${process.argv[2]}`)
+    console.log(process.env)
+})
 
 module.exports.ioobject = io;
