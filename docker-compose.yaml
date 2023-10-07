@@ -26,6 +26,8 @@ services:
       - "3001:3001"
     networks:
       - gameplay
+    depends_on:
+      - mariadb
 
   mariadb-exporter:
     image: prom/mysqld-exporter
@@ -34,8 +36,8 @@ services:
       - "9104:9104"
     restart: unless-stopped
     command:
-      - "--mysqld.username=bearman"
-      - "--mysqld.address=mariadb:3306"
+      - "--mysqld.username=gameplay"
+      - "--mysqld.address=localhost:3306"
     networks:
       - gameplay
 
