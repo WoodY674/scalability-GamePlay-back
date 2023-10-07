@@ -80,3 +80,5 @@ gameplay-api:
   service:
     type: ClusterIP
     port: 3000
+
+
