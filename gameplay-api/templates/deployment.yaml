@@ -32,9 +32,6 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          envFrom:
-            - configMapRef:
-                name: mariadb-config
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -62,3 +59,57 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gameplay-db
+  namespace: gameplay-api
+  labels:
+    app: gameplay-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gameplay-db
+  template:
+    metadata:
+      labels:
+        app: gameplay-db
+    spec:
+      containers:
+        - name: mariadb
+          image: bitnami/mariadb
+          envFrom:
+            - configMapRef:
+                name: gameplay-env-config
+          ports:
+            - containerPort: 3306
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gameplay-api
+  namespace: gameplay-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gameplay-api
+  template:
+    metadata:
+      labels:
+        app: gameplay-api
+    spec:
+      containers:
+        - name: gameplay-api
+          image: anthlr/scalabilite-gameplay-back:latest
+          ports:
+            - containerPort: 3001
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: gameplay-env-config

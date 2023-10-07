@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gameplay-api  # Nom du service
+  namespace: gameplay-api  # Spécifiez le namespace
+spec:
+  selector:
+    app: gameplay-api  # Sélectionnez les pods avec le label "app: gameplay-api"
+  ports:
+    - protocol: TCP
+      port: 3001
