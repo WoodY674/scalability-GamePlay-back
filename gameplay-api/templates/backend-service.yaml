@@ -8,6 +8,6 @@ spec:
   selector:
     app: gameplay-api  # Sélectionnez les pods avec le label "app: gameplay-api"
   ports:
-    - protocol: TCP
-      port: 3001
+    - port: 3001
       nodePort: 31000
+#      protocol: TCP

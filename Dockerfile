@@ -9,6 +9,6 @@ RUN npm install
 # Copiez le reste des fichiers de l'application
 COPY . /app
 # Port sur lequel votre application écoute
-EXPOSE 3000
+EXPOSE 3001
 # Commande pour démarrer l'application
 CMD ["npm", "start"]
