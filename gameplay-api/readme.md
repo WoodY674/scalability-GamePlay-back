@@ -2,12 +2,17 @@ step 1 :
 minikube delete
 step 2 :
 minikube start
+
 step 3 :
 kubectl apply -f ./gameplay-api/namespace.yaml 
-step 2 :
+step 4 :
 helm install gameplay-api ./gameplay-api -n gameplay-api 
 
+kubectl port-forward pods/gameplay-api-58df85469b-m6d46 31000:3001 -n gameplay-api
 
+
+//command all in one
+minikube delete && minikube start && kubectl apply -f ./gameplay-api/namespace.yaml && helm install gameplay-api ./gameplay-api -n gameplay-api
 
 
 

@@ -79,6 +79,4 @@ gameplay-api:
   fullnameOverride: gameplay-api
   service:
     type: ClusterIP
-    port: 3000
-
-
+    port: 3001

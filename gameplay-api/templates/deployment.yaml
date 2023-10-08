@@ -96,20 +96,31 @@ spec:
   selector:
     matchLabels:
       app: gameplay-api
+      tier: gameplay-api
   template:
     metadata:
       labels:
         app: gameplay-api
+        tier: gameplay-api
     spec:
       containers:
         - name: gameplay-api
           image: anthlr/scalabilite-gameplay-back:latest
+          env:
+            - name: THIS_IS_A_TEST
+              value: gameplay-db
+            - name: MYSQL_TYPE
+              value: "mariadb"
+            - name: THIS_IS_ANOTHER_TEST
+              value: "$(GAMEPLAY_SQL_SERVICE_HOST)"
+          envFrom:
+            - configMapRef:
+                name: gameplay-env-config
           ports:
             - containerPort: 3001
+              name: gameplay-api
           volumeMounts:
             - name: config-volume
               mountPath: /app/config
       volumes:
         - name: config-volume
-          configMap:
-            name: gameplay-env-config
