@@ -1,115 +1,33 @@
+# gameplay-api/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "gameplay-api.fullname" . }}
-  labels:
-    {{- include "gameplay-api.labels" . | nindent 4 }}
-spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
-  selector:
-    matchLabels:
-      {{- include "gameplay-api.selectorLabels" . | nindent 6 }}
-  template:
-    metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      labels:
-        {{- include "gameplay-api.selectorLabels" . | nindent 8 }}
-    spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "gameplay-api.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: gameplay-db
-  namespace: gameplay-api
-  labels:
-    app: gameplay-db
+  name: {{ .Release.Name }}-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gameplay-db
+      app: {{ .Release.Name }}-backend
   template:
     metadata:
       labels:
-        app: gameplay-db
+        app: {{ .Release.Name }}-backend
     spec:
       containers:
-        - name: mariadb
-          image: bitnami/mariadb
-          envFrom:
-            - configMapRef:
-                name: gameplay-env-config
+        - name: backend
+          image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
           ports:
-            - containerPort: 3306
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: gameplay-api
-  namespace: gameplay-api
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: gameplay-api
-  template:
-    metadata:
-      labels:
-        app: gameplay-api
-    spec:
-      containers:
-        - name: gameplay-api
-          image: anthlr/scalabilite-gameplay-back:latest
-          ports:
-            - containerPort: 3001
-          volumeMounts:
-            - name: config-volume
-              mountPath: /app/config
-      volumes:
-        - name: config-volume
-          configMap:
-            name: gameplay-env-config
+            - containerPort: {{ .Values.backend.port }}
+          env:
+            - name: MYSQL_TYPE
+              value: {{ .Values.database.type }}
+            - name: MYSQL_HOST
+              value: {{ .Values.database.host }}
+            - name: MYSQL_PORT
+              value: {{ .Values.database.port | quote }}
+            - name: MYSQL_USER
+              value: {{ .Values.database.username }}
+            - name: MYSQL_PASSWORD
+              value: {{ .Values.database.password }}
+            - name: MYSQL_DATABASE
+              value: {{ .Values.database.database }}

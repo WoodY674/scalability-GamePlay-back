@@ -1,0 +1,14 @@
+# gameplay-db/template/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-mariadb-service
+  namespace: gameplay-api
+spec:
+  selector:
+    app: gameplaydb
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+
