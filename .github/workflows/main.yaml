@@ -67,3 +67,40 @@ jobs:
 
       - name: Push Docker Image to Docker Hub
         run: docker push ${{ env.DOCKER_IMAGE_NAME_LATEST }}
+  Deploy-to-Kubernetes:
+    name: Deploy to Kubernetes
+    needs: [ Push-Docker-Image ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Pull Test Docker Image
+        run: docker pull ${{ env.DOCKER_IMAGE_NAME_LATEST }}
+
+      - name: Helm job dev api
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: helm upgrade gameplay-api ./gameplay-api --install --wait --atomic --namespace=game-team --values=./gameplay-api/values.yaml
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Helm job dev db
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: helm upgrade gameplay-db ./gameplay-db --install --wait --atomic --namespace=game-team --values=./gameplay-db/values.yaml
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Helm job integration api
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: helm upgrade gameplay-api ./gameplay-api --install --wait --atomic --namespace=integration --values=./gameplay-api/values.yaml
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Helm job integration db
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: helm upgrade gameplay-db ./gameplay-db --install --wait --atomic --namespace=integration --values=./gameplay-db/values.yaml
+          kubeconfig: ${{ secrets.KUBECONFIG }}
