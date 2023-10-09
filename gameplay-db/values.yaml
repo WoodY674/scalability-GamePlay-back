@@ -57,3 +57,8 @@ gameplaydb:
     name: gameplay
     user: gameplay
     password: gameplay
+  pvc:
+    enabled: true
+    name: gameplay-pvc
+    accessMode: ReadWriteOnce
+    storageSize: 10Gi

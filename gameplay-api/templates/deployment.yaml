@@ -31,3 +31,9 @@ spec:
               value: {{ .Values.database.password }}
             - name: MYSQL_DATABASE
               value: {{ .Values.database.database }}
+            - name: SERVICE_SCORE
+              value: {{ .Values.url.score }}
+            - name: CORS_ORIGIN
+              value: {{ .Values.url.cors }}
+            - name: SERVICE_BACKGROUND
+              value: {{ .Values.url.background }}

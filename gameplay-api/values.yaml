@@ -66,3 +66,8 @@ database:
   username: gameplay
   password: gameplay
   database: gameplay
+
+url:
+  score: http://leaddev.digitalseeder.com/wall-of-fame-api
+  cors: leaddev.digitalseeder.com
+  background: http://leaddev.digitalseeder.com/background-api
