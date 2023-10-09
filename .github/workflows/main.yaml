@@ -17,6 +17,11 @@ env:
   NEXT_PUBLIC_PUB_KEY: ${{ secrets.NEXT_PUBLIC_PUB_KEY }}
 
 jobs:
+  env:
+    NEXT_PUBLIC_PRIV_KEY_FAKE: ${{ secrets.NEXT_PUBLIC_PRIV_KEY_FAKE }}
+    NEXT_PUBLIC_PUB_KEY_FAKE: ${{ secrets.NEXT_PUBLIC_PUB_KEY_FAKE }}
+    NEXT_PUBLIC_PUB_KEY: ${{ secrets.NEXT_PUBLIC_PUB_KEY }}
+
   Build-Test-Image:
     if: github.event.pull_request.merged == true
     name: 🐳 Build Test Docker Image
