@@ -12,6 +12,9 @@ env:
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   DOCKER_IMAGE_NAME_TEST: anthlr/scalabilite-gameplay-back:$GITHUB_RUN_ID
   DOCKER_IMAGE_NAME_LATEST: anthlr/scalabilite-gameplay-back:latest
+  NEXT_PUBLIC_PRIV_KEY_FAKE: ${{ secrets.NEXT_PUBLIC_PRIV_KEY_FAKE }}
+  NEXT_PUBLIC_PUB_KEY_FAKE: ${{ secrets.NEXT_PUBLIC_PUB_KEY_FAKE }}
+  NEXT_PUBLIC_PUB_KEY: ${{ secrets.NEXT_PUBLIC_PUB_KEY }}
 
 jobs:
   Build-Test-Image:
@@ -82,23 +85,18 @@ jobs:
       - name: Pull Test Docker Image
         run: docker pull ${{ env.DOCKER_IMAGE_NAME_LATEST }}
 
-      - name: Helm job dev db
-        uses: WyriHaximus/github-action-helm3@v3
-        with:
-          exec: helm upgrade gameplay-db ./gameplay-db --install --wait --atomic --namespace=game-team --values=./gameplay-db/values.yaml
-          kubeconfig: ${{ secrets.KUBECONFIG }}
+#      - name: Helm job dev api
+#        uses: WyriHaximus/github-action-helm3@v3
+#        with:
+#          exec: helm upgrade gameplay-api ./gameplay-api --install --wait --atomic --namespace=game-team --values=./gameplay-api/values.yaml
+#          kubeconfig: ${{ secrets.KUBECONFIG }}
+#
+#      - name: Helm job dev db
+#        uses: WyriHaximus/github-action-helm3@v3
+#        with:
+#          exec: helm upgrade gameplay-db ./gameplay-db --install --wait --atomic --namespace=game-team --values=./gameplay-db/values.yaml
+#          kubeconfig: ${{ secrets.KUBECONFIG }}
 
-      - name: Helm job dev api
-        uses: WyriHaximus/github-action-helm3@v3
-        with:
-          exec: helm upgrade gameplay-api ./gameplay-api --install --wait --atomic --namespace=game-team --values=./gameplay-api/values.yaml
-          kubeconfig: ${{ secrets.KUBECONFIG }}
-
-      - name: Helm job integration db
-        uses: WyriHaximus/github-action-helm3@v3
-        with:
-          exec: helm upgrade gameplay-db ./gameplay-db --install --wait --atomic --namespace=integration --values=./gameplay-db/values.yaml
-          kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Helm job integration api
         uses: WyriHaximus/github-action-helm3@v3
