@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-mariadb
-  namespace: game-team
 spec:
   replicas: 1
   selector:
