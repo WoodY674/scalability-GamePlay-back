@@ -1,4 +1,4 @@
-import {Router, Request, Response} from "express";
+import {Router} from "express";
 import {AppDataSource} from "../utils/database/database.config";
 import {SessionsServices} from "../services/sessions/sessions.services";
 import {BackgroundRes} from "../models/api";
@@ -10,6 +10,8 @@ import {SessionModelLaunch, SessionModelLaunchRes} from "../models/sessions";
 import {Utils} from "../utils/utils";
 import {RequestValidation} from "../enum/enum";
 import {BackgroundService} from "../services/background/background.service";
+import {TokenPayload, TokenType, verifyToken} from "../utils/token";
+
 const sessionsServices: SessionsServices = new SessionsServices(AppDataSource);
 const playersServices: PlayersService = new PlayersService(AppDataSource);
 const treasuresServices: TreasuresServices = new TreasuresServices(AppDataSource);
@@ -139,9 +141,23 @@ function getRndInteger(min:number, max:number) {
  *         description: An Error Occurred
  */
 SessionController.post("/launch", async function(req, res){
+    //region token handling
+    const token = req.headers.authorization
+    if(token == undefined){
+        return res.status(401).json({msg:"No token provided"})
+    }
+    let payload: TokenPayload = {userId:"", mail:""}
+    try {
+        payload = verifyToken(token, TokenType.Fake)
+    }catch (e){
+        return res.status(403).json({msg:e})
+    }
+    //endregion
+
+    //region check req body
     const body:SessionModelLaunch = {
-        avatar:"",
-        userId:""
+        avatar: "",
+        userId: payload.userId
     }
     const checkingBody = Utils.validBodyRequest(req, body)
     switch (checkingBody){
@@ -154,7 +170,8 @@ SessionController.post("/launch", async function(req, res){
     }
 
     body.avatar = req.body.avatar
-    body.userId = req.body.userId
+    body.userId = payload.userId //req.body.userId
+    //endregion
 
     try {
         let currSession:SessionDto

@@ -1,5 +1,6 @@
 import { Utils } from './utils'
 import { Request } from 'express'
+import {signToken, TokenType, verifyToken} from "./token";
 
 describe('Utils', () => {
   describe('validBodyRequest', () => {
@@ -39,3 +40,27 @@ describe('Utils', () => {
     })
   })
 })
+
+
+describe( 'token', () => {
+  const payload = {userId:"uid", mail:"test@gmail.com"}
+
+  it( 'sign a token', () => {
+    expect( typeof signToken(payload) ).toBe(typeof "") ;
+  })
+
+  it( 'verify token success', () => {
+    const token = signToken(payload)
+    const tokenPayload = verifyToken(token, TokenType.Fake)
+    expect(tokenPayload.userId).toBe( payload.userId );
+    expect(tokenPayload.mail).toBe( payload.mail );
+  } );
+
+
+  it( 'verify token failure : bad pub key', () => {
+    const token = signToken(payload)
+    expect(() => {
+      verifyToken(token, TokenType.Real)
+    }).toThrow(Error);
+  } );
+} )
