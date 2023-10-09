@@ -26,3 +26,10 @@ spec:
               value: {{ .Values.gameplaydb.db.password }}
           ports:
             - containerPort: 3306
+          volumeMounts:
+            - name: mariadb-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mariadb-persistent-storage
+          persistentVolumeClaim:
+            claimName: { { .Values.gameplaydb.pvc.name }}
