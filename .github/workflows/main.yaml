@@ -39,6 +39,7 @@ jobs:
       NEXT_PUBLIC_PRIV_KEY_FAKE: ${{ secrets.NEXT_PUBLIC_PRIV_KEY_FAKE }}
       NEXT_PUBLIC_PUB_KEY_FAKE: ${{ secrets.NEXT_PUBLIC_PUB_KEY_FAKE }}
       NEXT_PUBLIC_PUB_KEY: ${{ secrets.NEXT_PUBLIC_PUB_KEY }}
+      NEXT_PUBLIC_TEST: this is a test
     name: 🧩 Run Tests
     runs-on: ubuntu-latest
     needs: Build-Test-Image
