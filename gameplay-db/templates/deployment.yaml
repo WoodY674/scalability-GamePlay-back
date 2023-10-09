@@ -1,3 +1,4 @@
+# templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -12,6 +13,10 @@ spec:
       labels:
         app: gameplaydb
     spec:
+      volumes:
+        - name: mariadb-persistent-storage
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-mariadb-pvc
       containers:
         - name: mariadb
           image: bitnami/mariadb:latest
@@ -26,10 +31,3 @@ spec:
               value: {{ .Values.gameplaydb.db.password }}
           ports:
             - containerPort: 3306
-          volumeMounts:
-            - name: mariadb-persistent-storage
-              mountPath: /var/lib/mysql
-      volumes:
-        - name: mariadb-persistent-storage
-          persistentVolumeClaim:
-            claimName: {{ .Values.gameplaydb.pvc.name }}
