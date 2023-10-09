@@ -1,64 +1,33 @@
+# gameplay-api/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "gameplay-api.fullname" . }}
-  labels:
-    {{- include "gameplay-api.labels" . | nindent 4 }}
+  name: {{ .Release.Name }}-backend
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: 1
   selector:
     matchLabels:
-      {{- include "gameplay-api.selectorLabels" . | nindent 6 }}
+      app: {{ .Release.Name }}-backend
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "gameplay-api.selectorLabels" . | nindent 8 }}
+        app: {{ .Release.Name }}-backend
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "gameplay-api.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          envFrom:
-            - configMapRef:
-                name: mariadb-config
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: backend
+          image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
           ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+            - containerPort: {{ .Values.backend.port }}
+          env:
+            - name: MYSQL_TYPE
+              value: {{ .Values.database.type }}
+            - name: MYSQL_HOST
+              value: {{ .Values.database.host }}
+            - name: MYSQL_PORT
+              value: {{ .Values.database.port | quote }}
+            - name: MYSQL_USER
+              value: {{ .Values.database.username }}
+            - name: MYSQL_PASSWORD
+              value: {{ .Values.database.password }}
+            - name: MYSQL_DATABASE
+              value: {{ .Values.database.database }}

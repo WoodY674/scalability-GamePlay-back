@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-mariadb
+  namespace: gameplay-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gameplaydb
+  template:
+    metadata:
+      labels:
+        app: gameplaydb
+    spec:
+      containers:
+        - name: mariadb
+          image: bitnami/mariadb:latest
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              value: {{ .Values.gameplaydb.auth.rootPassword }}
+            - name: MARIADB_DATABASE
+              value: {{ .Values.gameplaydb.db.name }}
+            - name: MARIADB_USER
+              value: {{ .Values.gameplaydb.db.user }}
+            - name: MARIADB_PASSWORD
+              value: {{ .Values.gameplaydb.db.password }}
+          ports:
+            - containerPort: 3306
