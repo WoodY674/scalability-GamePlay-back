@@ -82,16 +82,22 @@ jobs:
       - name: Pull Test Docker Image
         run: docker pull ${{ env.DOCKER_IMAGE_NAME_LATEST }}
 
+      - name: Helm job dev db
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: helm upgrade gameplay-db ./gameplay-db --install --wait --atomic --namespace=game-team --values=./gameplay-db/values.yaml
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
       - name: Helm job dev api
         uses: WyriHaximus/github-action-helm3@v3
         with:
           exec: helm upgrade gameplay-api ./gameplay-api --install --wait --atomic --namespace=game-team --values=./gameplay-api/values.yaml
           kubeconfig: ${{ secrets.KUBECONFIG }}
 
-      - name: Helm job dev db
+      - name: Helm job integration db
         uses: WyriHaximus/github-action-helm3@v3
         with:
-          exec: helm upgrade gameplay-db ./gameplay-db --install --wait --atomic --namespace=game-team --values=./gameplay-db/values.yaml
+          exec: helm upgrade gameplay-db ./gameplay-db --install --wait --atomic --namespace=integration --values=./gameplay-db/values.yaml
           kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Helm job integration api
@@ -100,8 +106,4 @@ jobs:
           exec: helm upgrade gameplay-api ./gameplay-api --install --wait --atomic --namespace=integration --values=./gameplay-api/values.yaml
           kubeconfig: ${{ secrets.KUBECONFIG }}
 
-      - name: Helm job integration db
-        uses: WyriHaximus/github-action-helm3@v3
-        with:
-          exec: helm upgrade gameplay-db ./gameplay-db --install --wait --atomic --namespace=integration --values=./gameplay-db/values.yaml
-          kubeconfig: ${{ secrets.KUBECONFIG }}
+
