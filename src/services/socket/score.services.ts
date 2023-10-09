@@ -9,7 +9,7 @@ export interface PostBody{
 }
 
 export class ScoreServices{
-    host = "http://" + (process.env.SERVICE_SCORE ?? "serviceScore")
+    host = process.env.SERVICE_SCORE
 
     async getScore(body:PostBody) : Promise<Scores>{
         try {
