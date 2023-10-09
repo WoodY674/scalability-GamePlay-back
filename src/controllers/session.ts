@@ -148,7 +148,7 @@ SessionController.post("/launch", async function(req, res){
     }
     let payload: TokenPayload = {userId:"", mail:""}
     try {
-        payload = verifyToken(token, TokenType.Fake)
+        payload = verifyToken(token, (process.env.NEXT_PUBLIC_IS_LOCAL == "true" ? TokenType.Fake : TokenType.Real))
     }catch (e){
         return res.status(403).json({msg:e})
     }
