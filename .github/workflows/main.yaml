@@ -102,6 +102,11 @@ jobs:
 #          exec: helm upgrade gameplay-db ./gameplay-db --install --wait --atomic --namespace=game-team --values=./gameplay-db/values.yaml
 #          kubeconfig: ${{ secrets.KUBECONFIG }}
 
+      - name: Helm job integration db
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: helm upgrade gameplay-db ./gameplay-db --install --wait --atomic --namespace=integration --values=./gameplay-db/values.yaml
+          kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Helm job integration api
         uses: WyriHaximus/github-action-helm3@v3
