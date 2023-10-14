@@ -16,7 +16,6 @@ const sessionsServices: SessionsServices = new SessionsServices(AppDataSource);
 const playersServices: PlayersService = new PlayersService(AppDataSource);
 const treasuresServices: TreasuresServices = new TreasuresServices(AppDataSource);
 const backgroundService = new BackgroundService()
-const crypto = require("crypto")
 const socket = require('../main');
 let SessionController  = Router();
 
@@ -124,14 +123,11 @@ function getRndInteger(min:number, max:number) {
  *             properties:
  *               avatar:
  *                 type: string
- *               userId:
- *                 type: UUID
  *             example:
  *               avatar: "http://avatar.com/1234.png"
- *               userId: 21cd7da4-9398-480a-a4ef-d8ea6e7fafb1
  *     responses:
  *       201:
- *         description: Utilisateur connecter avec succès
+ *         description: user connected, create or join a session
  *         content:
  *            application/json:
  *              schema:
@@ -157,7 +153,6 @@ SessionController.post("/launch", async function(req, res){
     //region check req body
     const body:SessionModelLaunch = {
         avatar: "",
-        userId: payload.userId
     }
     const checkingBody = Utils.validBodyRequest(req, body)
     switch (checkingBody){
@@ -170,7 +165,6 @@ SessionController.post("/launch", async function(req, res){
     }
 
     body.avatar = req.body.avatar
-    body.userId = payload.userId //req.body.userId
     //endregion
 
     try {
@@ -197,10 +191,10 @@ SessionController.post("/launch", async function(req, res){
 
         treasures = await treasuresServices.getAllUnclaimedBySession(currSession.id)
 
-        let currPlayer = await playersServices.getByUid(body.userId) // for case the user reconnect
+        let currPlayer = await playersServices.getByUid(payload.userId) // for case the user reconnect
         if(currPlayer == null){
-            await playersServices.create({userid:body.userId, posX:getRndInteger(0, currSession.width), posY:getRndInteger(0, currSession.height), session:currSession, avatar:body.avatar})
-            currPlayer = await playersServices.getByUid(body.userId)
+            await playersServices.create({userid:payload.userId, posX:getRndInteger(0, currSession.width), posY:getRndInteger(0, currSession.height), session:currSession, avatar:body.avatar})
+            currPlayer = await playersServices.getByUid(payload.userId)
             if(currPlayer == null){
                 return res.status(500).json({msg:"Player wasn't created"})
             }
