@@ -6,7 +6,7 @@ import SessionController from "./controllers/session";
 import MetricsController from "./controllers/metrics";
 import cors from 'cors';
 
-const port: number = 3001
+const port: number = Number(process.env.PORT) ?? 3001
 const app = express()
 const httpServer: Express = require('http').createServer(app)
 const io = require('socket.io')(httpServer, {cors: corsApp})

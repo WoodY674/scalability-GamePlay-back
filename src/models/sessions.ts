@@ -10,7 +10,6 @@ export interface SessionModelRequest {
 
 export interface SessionModelLaunch{
     avatar: string;
-    userId: string;
 }
 
 export interface SessionModelLaunchRes{
